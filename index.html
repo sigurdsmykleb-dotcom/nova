@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOVA | Explore the Unknown</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#050610;color:white;
+  font-family:Arial,sans-serif;overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse at 50% 35%,#252060 0%,#0b0c1b 45%,#050610 80%);
+}
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 8%;border-bottom:1px solid #ffffff12;
+}
+.logo{font-size:25px;font-weight:bold;letter-spacing:6px}
+.logo span{color:#8585ff}
+nav a{color:#b8b9d5;text-decoration:none;margin-left:25px}
+.hero{text-align:center;padding:95px 20px 80px}
+.tag{
+  color:#aaaaff;border:1px solid #6565a9;border-radius:30px;
+  display:inline-block;padding:10px 16px;font-size:11px;letter-spacing:3px;
+}
+h1{font-size:clamp(48px,9vw,100px);line-height:1.05;letter-spacing:-4px;margin:28px 0}
+h1 span{
+  background:linear-gradient(90deg,#658aff,#bd7aff,#62e5ff);
+  color:transparent;background-clip:text;
+}
+p{color:#aaaac4;line-height:1.8}
+.hero p{max-width:520px;margin:0 auto}
+.orb{
+  height:180px;width:180px;border-radius:50%;margin:55px auto;
+  background:radial-gradient(circle at 32% 28%,#fff 0%,#929eff 5%,#6e43ff 25%,#141a53 60%,#050610 75%);
+  box-shadow:0 0 45px #6855ff80,0 0 110px #4b39ff45;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-16px) rotate(12deg)}}
+button{
+  padding:15px 24px;margin:8px;border-radius:8px;
+  color:white;background:#15162a;border:1px solid #5151a2;
+  cursor:pointer;font-size:14px;
+}
+.primary{background:linear-gradient(100deg,#586cff,#974cff);border:0}
+button:hover{filter:brightness(1.3);transform:translateY(-2px)}
+section.cards{max-width:1000px;margin:auto;padding:50px 25px 100px}
+h2{font-size:32px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.card{
+  padding:25px;border-radius:14px;border:1px solid #ffffff1a;
+  background:#ffffff06;transition:.3s;
+}
+.card:hover{transform:translateY(-6px);border-color:#8585ff;box-shadow:0 10px 40px #5544ff18}
+.card .icon{font-size:32px}
+.card p{font-size:14px}
+footer{text-align:center;padding:25px;color:#777995;border-top:1px solid #ffffff12}
+@media(max-width:650px){
+ .grid{grid-template-columns:1fr}
+ nav{padding:22px 5%}nav a{margin-left:10px;font-size:12px}
+ .hero{padding-top:70px}h1{letter-spacing:-2px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">NO<span>V</span>A</div>
+  <div><a href="#explore">Explore</a><a href="#about">About</a></div>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="tag">✦ A DIGITAL PLAYGROUND ✦</div>
+    <h1>Explore the<br><span>unknown.</span></h1>
+    <p>A space for ideas, experiments and things that don't fit anywhere else. Welcome to a different side of the internet.</p>
+    <div class="orb"></div>
+    <button class="primary" onclick="document.querySelector('#explore').scrollIntoView({behavior:'smooth'})">Enter experience ↗</button>
+    <button onclick="alert('Welcome to NOVA. Your journey starts here.')">Discover more</button>
+  </div>
+
+  <section class="cards" id="explore">
+    <p>THE COLLECTION</p>
+    <h2>Beyond the ordinary.</h2>
+    <div class="grid">
+      <div class="card"><div class="icon">✳</div><h3>Motion</h3><p>Movement, light and digital experiments.</p></div>
+      <div class="card"><div class="icon">◎</div><h3>Space</h3><p>Abstract worlds inspired by the future.</p></div>
+      <div class="card"><div class="icon">⌁</div><h3>Sound</h3><p>Ideas that bring digital creativity to life.</p></div>
+    </div>
+  </section>
+
+  <section class="cards" id="about">
+    <p>ABOUT NOVA</p>
+    <h2>Made for curiosity.</h2>
+    <p>Your own corner of the internet. A place to experiment, build and create.</p>
+  </section>
+</main>
+<footer>N O V A &nbsp; · &nbsp; YOUR DIGITAL UNIVERSE</footer>
+</body>
+</html>
