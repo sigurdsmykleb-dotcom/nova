@@ -1,247 +1,560 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cyber Runner | SIGVIA</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#171b20;color:#f5f0df;font-family:system-ui,Arial,sans-serif}
-header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:#20262b}
-header a{color:#f5f0df;text-decoration:none}
-.logo{font-weight:900;letter-spacing:4px;font-size:1.3rem}
-nav a{margin-left:18px;color:#c8c9bf}
-main{width:min(1000px,94%);margin:35px auto}
-h1{font-size:clamp(2rem,5vw,3.5rem);margin:4px 0}
-.sub{color:#b6b9ae}
-.hud{display:flex;gap:12px;margin:20px 0}
-.stat{background:#282f32;border:1px solid #48514d;border-radius:9px;padding:10px 18px}
-.stat small{display:block;color:#b6b9ae;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
-.stat strong{font-size:1.3rem}
-.stage{position:relative;overflow:hidden;border:2px solid #687064;border-radius:12px;background:#a7b58b}
-canvas{display:block;width:100%;height:auto;touch-action:manipulation}
-.overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#17201bbd;padding:20px}
-.overlay.hidden{display:none}
-.dialog{max-width:390px;background:#252d29;border:1px solid #687064;border-radius:14px;padding:26px}
-.dialog h2{font-size:2rem;margin:0 0 8px}
-.dialog p{color:#d0d6c8;line-height:1.6}
-button{background:#d4c58a;color:#252820;border:0;border-radius:7px;padding:12px 20px;font-size:1rem;font-weight:800;cursor:pointer}
-button:hover{background:#e8d9a1}
-.controls{display:flex;gap:10px;margin-top:12px}
-.controls button{flex:1}
-.help{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#aeb4a8;font-size:.85rem;margin-top:14px}
-footer{text-align:center;padding:25px;color:#939c91;font-size:.8rem}
-@media(max-width:600px){header{padding:16px 4%}nav a{margin-left:8px;font-size:.85rem}.hud{gap:6px}.stat{padding:8px 12px}main{margin:24px auto}}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  --cyan: #36f5ff;
+  --purple: #a66bff;
+  --bg: #050711;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #f4f7ff;
+  background:
+    radial-gradient(ellipse at 50% 0%, #17204a 0%, transparent 55%),
+    var(--bg);
+  font-family: Inter, sans-serif;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 6%;
+  border-bottom: 1px solid #263052;
+}
+.logo {
+  color: var(--cyan);
+  font: 900 22px Orbitron, sans-serif;
+  text-decoration: none;
+  letter-spacing: 3px;
+}
+nav { display: flex; gap: 20px; }
+nav a {
+  color: #b8c1df;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+nav a:hover { color: var(--cyan); }
+main { width: min(1050px, 94%); margin: 35px auto; }
+.heading { text-align: center; margin-bottom: 22px; }
+.eyebrow {
+  color: var(--cyan);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 10px 0;
+  font: 900 clamp(30px, 6vw, 56px) Orbitron, sans-serif;
+  letter-spacing: 2px;
+  text-shadow: 0 0 24px #36f5ff55;
+}
+.heading p { color: #9ba7cb; font-size: 14px; }
+.game-shell {
+  padding: 12px;
+  border: 1px solid #34436c;
+  border-radius: 18px;
+  background: #0a0e1d;
+  box-shadow: 0 0 45px #413cff17, 0 0 30px #36f5ff0b;
+}
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 14px;
+}
+.stat small {
+  display: block;
+  color: #8e9aba;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.stat strong {
+  display: block;
+  margin-top: 4px;
+  font: 700 19px Orbitron, sans-serif;
+}
+#score { color: var(--cyan); }
+#best { color: #c6a4ff; }
+#speed { color: #fff; }
+.stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #24365c;
+  border-radius: 10px;
+  background: #070b1b;
+}
+canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  background: #050711b8;
+  backdrop-filter: blur(5px);
+}
+.overlay.hidden { display: none; }
+.overlay h2 {
+  margin: 0 0 12px;
+  color: var(--cyan);
+  font: 900 clamp(24px, 5vw, 42px) Orbitron, sans-serif;
+  text-shadow: 0 0 25px #36f5ff77;
+}
+.overlay p {
+  max-width: 390px;
+  color: #c0c9e5;
+  line-height: 1.7;
+  font-size: 13px;
+}
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 22px;
+  color: #051018;
+  background: var(--cyan);
+  font: 800 12px Orbitron, sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 22px #36f5ff33;
+}
+button:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 4px 3px;
+  color: #a8b4d4;
+  font-size: 11px;
+}
+kbd {
+  padding: 4px 7px;
+  border: 1px solid #34436c;
+  border-radius: 5px;
+  color: #e9f5ff;
+  background: #121a31;
+}
+.mobile-controls {
+  display: none;
+  justify-content: center;
+  gap: 14px;
+  padding-top: 14px;
+}
+.mobile-controls button { width: 75px; font-size: 20px; padding: 12px; }
+footer {
+  padding: 25px;
+  text-align: center;
+  color: #64708f;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+@media(max-width:600px) {
+  header { padding: 17px 5%; }
+  nav { gap: 10px; }
+  nav a { font-size: 9px; letter-spacing: 0; }
+  .mobile-controls { display: flex; }
+  .controls { justify-content: center; text-align: center; }
+  .game-shell { padding: 7px; }
+  .hud { padding: 8px 4px 12px; }
+  .stat strong { font-size: 15px; }
+}
 </style>
 </head>
 <body>
 <header>
   <a class="logo" href="index.html">SIGVIA</a>
-  <nav><a href="index.html">Home</a><a href="games.html">Games</a></nav>
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="games.html">GAMES</a>
+    <a href="about.html">ABOUT</a>
+  </nav>
 </header>
 
 <main>
-  <p style="color:#d4c58a;letter-spacing:3px;font-size:.75rem">ARCADE / ENDLESS RUNNER</p>
-  <h1>Cyber Runner</h1>
-  <p class="sub">A forgotten forest. One path. How far can you run?</p>
+  <section class="heading">
+    <div class="eyebrow">SIGVIA ARCADE / 002</div>
+    <h1>CYBER RUNNER</h1>
+    <p>Enter the grid. Dodge the cubes. Beat the system.</p>
+  </section>
 
-  <div class="hud">
-    <div class="stat"><small>Distance</small><strong id="score">0 m</strong></div>
-    <div class="stat"><small>Best</small><strong id="best">0 m</strong></div>
-  </div>
+  <section class="game-shell">
+    <div class="hud">
+      <div class="stat"><small>SCORE</small><strong id="score">00000</strong></div>
+      <div class="stat"><small>BEST</small><strong id="best">00000</strong></div>
+      <div class="stat"><small>SPEED</small><strong id="speed">1.0x</strong></div>
+    </div>
 
-  <div class="stage">
-    <canvas id="game" width="900" height="440"></canvas>
-    <div class="overlay" id="overlay">
-      <div class="dialog">
-        <h2 id="title">Into the Wild</h2>
-        <p id="message">Run through the forest, jump over fallen logs and rocks, and beat your distance record.</p>
-        <button id="start">Start running</button>
-        <p style="font-size:.8rem;margin-bottom:0">SPACE / ↑ / W to jump</p>
+    <div class="stage">
+      <canvas id="game" width="960" height="540"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="eyebrow">SYSTEM ONLINE</div>
+        <h2 id="overlayTitle">READY TO RUN?</h2>
+        <p id="overlayText">Byt fil mellom tre baner og hopp over dei glødande kubane. Kor lenge klarer du deg?</p>
+        <button id="start">START RUN</button>
       </div>
     </div>
-  </div>
 
-  <div class="controls">
-    <button id="jump">JUMP ↑</button>
-    <button id="restart">RESTART ↻</button>
-  </div>
-  <div class="help"><span>SPACE · ↑ · W = Jump</span><span>Tap the game to jump on mobile</span></div>
+    <div class="controls">
+      <span><kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd> BYT BANE</span>
+      <span><kbd>SPACE</kbd> <kbd>↑</kbd> HOPP</span>
+      <span>UNNGÅ KUBANE. OVERLEV.</span>
+    </div>
+    <div class="mobile-controls">
+      <button id="left" aria-label="Venstre">←</button>
+      <button id="jump" aria-label="Hopp">↑</button>
+      <button id="right" aria-label="Høgre">→</button>
+    </div>
+  </section>
 </main>
-<footer>SIGVIA ARCADE · One more run?</footer>
+
+<footer>© 2026 SIGVIA — RUN THE GRID.</footer>
 
 <script>
 (() => {
-const canvas=document.getElementById("game");
-const ctx=canvas.getContext("2d");
-const scoreText=document.getElementById("score");
-const bestText=document.getElementById("best");
-const overlay=document.getElementById("overlay");
-const title=document.getElementById("title");
-const message=document.getElementById("message");
-const startButton=document.getElementById("start");
-const W=900,H=440,ground=345;
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+  const $ = id => document.getElementById(id);
+  const W = canvas.width, H = canvas.height;
+  const horizon = 115;
+  const playerZ = 0.88;
 
-let running=false,dead=false,score=0,best=0,speed=320,last=0,spawn=0;
-let obstacles=[],clouds=[],dust=[],world=0;
-const player={x:115,y:ground-48,w:34,h:48,vy:0,grounded:true};
+  let running = false;
+  let lastTime = 0;
+  let score = 0;
+  let speed = 0.38;
+  let spawnTimer = 0;
+  let obstacles = [];
+  let particles = [];
+  let roadOffset = 0;
+  let best = 0;
+  try { best = Number(localStorage.getItem("sigviaRunnerBest")) || 0; }
+  catch {}
+  $("best").textContent = String(best).padStart(5, "0");
 
-try{best=Number(localStorage.getItem("sigviaForestBest"))||0}catch(e){}
-bestText.textContent=best+" m";
+  const player = { lane: 0, visualLane: 0, jump: 0, velocity: 0 };
 
-for(let i=0;i<7;i++)clouds.push({x:i*170+Math.random()*60,y:35+Math.random()*100,w:55+Math.random()*70});
+  function roadX(lane, z) {
+    const t = Math.max(0, Math.min(1, z));
+    const width = 55 + t * 570;
+    const center = W / 2;
+    return center + lane * width * 0.34;
+  }
 
-function reset(){
- score=0;speed=320;spawn=1;obstacles=[];dust=[];
- player.y=ground-player.h;player.vy=0;player.grounded=true;
- dead=false;running=true;world=0;
- overlay.classList.add("hidden");
- last=performance.now();
- requestAnimationFrame(loop);
-}
+  function roadY(z) {
+    return horizon + Math.pow(Math.max(0, z), 1.55) * (H - horizon + 30);
+  }
 
-function jump(){
- if(!running){if(!dead)reset();return}
- if(player.grounded){
-   player.vy=-690;
-   player.grounded=false;
-   for(let i=0;i<7;i++)dust.push({x:player.x+15,y:ground,vx:(Math.random()-.5)*100,vy:-Math.random()*100,life:.4});
- }
-}
+  function poly(points, fill, stroke, lineWidth = 1) {
+    ctx.beginPath();
+    points.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    ctx.closePath();
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineWidth; ctx.stroke(); }
+  }
 
-function finish(){
- running=false;dead=true;
- title.textContent="The forest wins";
- message.textContent="You ran "+Math.floor(score)+" metres. Take a breath and try to beat your record.";
- startButton.textContent="Run again";
- overlay.classList.remove("hidden");
-}
+  function cube(x, y, size, color, glow = true) {
+    const s = size;
+    const d = s * 0.34;
+    if (glow) {
+      ctx.shadowBlur = s * 0.6;
+      ctx.shadowColor = color;
+    }
+    poly([[x-s/2,y-s],[x-s/2+d,y-s-d],[x+s/2+d,y-s-d],[x+s/2,y-s]],
+      "#1b3d60", color, Math.max(1, s * .025));
+    poly([[x+s/2,y-s],[x+s/2+d,y-s-d],[x+s/2+d,y-d],[x+s/2,y]],
+      "#15264c", color, Math.max(1, s * .025));
+    poly([[x-s/2,y-s],[x+s/2,y-s],[x+s/2,y],[x-s/2,y]],
+      "#102039", color, Math.max(1, s * .025));
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(1, s * .025);
+    ctx.strokeRect(x-s*.31, y-s*.78, s*.62, s*.55);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = .12;
+    ctx.fillRect(x-s*.31, y-s*.78, s*.62, s*.55);
+    ctx.globalAlpha = 1;
+  }
 
-function rect(x,y,w,h,color){
- ctx.fillStyle=color;ctx.fillRect(x,y,w,h);
-}
+  function drawBackground(dt) {
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, "#080d26");
+    sky.addColorStop(.55, "#101532");
+    sky.addColorStop(1, "#070b18");
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
 
-function tree(x,y,scale,color){
- rect(x-5*scale,y-30*scale,10*scale,30*scale,"#4b4030");
- ctx.fillStyle=color;
- ctx.beginPath();ctx.moveTo(x,y-90*scale);ctx.lineTo(x-31*scale,y-24*scale);ctx.lineTo(x+31*scale,y-24*scale);ctx.closePath();ctx.fill();
- ctx.beginPath();ctx.moveTo(x,y-65*scale);ctx.lineTo(x-37*scale,y-4*scale);ctx.lineTo(x+37*scale,y-4*scale);ctx.closePath();ctx.fill();
-}
+    // Distant digital skyline
+    for (let i = 0; i < 22; i++) {
+      const x = i * 49 - 10;
+      const height = 25 + (i * 37 % 90);
+      ctx.fillStyle = i % 2 ? "#101a39" : "#12132f";
+      ctx.fillRect(x, horizon - height, 35, height);
+      ctx.fillStyle = i % 3 ? "#285a80" : "#8c53e8";
+      ctx.globalAlpha = .5;
+      for (let j = 0; j < 4; j++)
+        ctx.fillRect(x + 7 + (j%2)*12, horizon-height+10+j*13, 3, 5);
+      ctx.globalAlpha = 1;
+    }
 
-function draw(){
- ctx.clearRect(0,0,W,H);
+    // Road perspective
+    poly([[W/2-24,horizon],[W/2+24,horizon],[W*.96,H],[W*.04,H]], "#0b1226", "#26345b", 2);
 
- // Early-morning sky
- let sky=ctx.createLinearGradient(0,0,0,H);
- sky.addColorStop(0,"#a9c4bc");
- sky.addColorStop(.65,"#d4d4ad");
- sky.addColorStop(1,"#e0c995");
- ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+    roadOffset = (roadOffset + dt * speed * 0.8) % 1;
+    for (let i = 0; i < 18; i++) {
+      let z = (i / 18 + roadOffset) % 1;
+      const y = roadY(z);
+      const half = 24 + z * (W*.46 - 24);
+      const x = W/2;
+      ctx.strokeStyle = `rgba(54,245,255,${.12 + z*.55})`;
+      ctx.lineWidth = 1 + z * 2;
+      ctx.beginPath();
+      ctx.moveTo(x-half, y);
+      ctx.lineTo(x+half, y);
+      ctx.stroke();
+    }
 
- // Pale sun
- ctx.fillStyle="#f2e5b4";
- ctx.beginPath();ctx.arc(690,100,39,0,Math.PI*2);ctx.fill();
+    // Lane guides
+    for (const laneLine of [-.5, .5]) {
+      ctx.strokeStyle = "#36f5ff";
+      ctx.globalAlpha = .2;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(W/2 + laneLine*48, horizon);
+      ctx.lineTo(W/2 + laneLine*W*.7, H);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
 
- // Distant hills
- ctx.fillStyle="#829b80";
- ctx.beginPath();ctx.moveTo(0,265);
- for(let x=0;x<=W;x+=60)ctx.lineTo(x,230+Math.sin(x*.012+world*.0004)*35);
- ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+    // Neon roadside pylons
+    for (let i = 0; i < 12; i++) {
+      const z = (i / 12 + roadOffset) % 1;
+      const y = roadY(z);
+      const half = 24 + z * (W*.46 - 24);
+      const size = 2 + z*13;
+      for (const side of [-1, 1]) {
+        const x = W/2 + side * (half + size*1.4);
+        ctx.fillStyle = i%2 ? "#a66bff" : "#36f5ff";
+        ctx.shadowBlur = size*2;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.fillRect(x-size/3, y-size*2, size/1.5, size*2);
+        ctx.shadowBlur = 0;
+      }
+    }
+  }
 
- // Forest silhouettes
- for(let i=0;i<12;i++){
-   let x=((i*100-world*.22)%(W+140)+W+140)%(W+140)-60;
-   tree(x,ground-12,.72,"#526d56");
- }
- // Ground
- rect(0,ground,W,H-ground,"#6c7550");
- rect(0,ground,W,5,"#414d3c");
+  function drawPlayer() {
+    const x = roadX(player.visualLane, playerZ);
+    const ground = roadY(playerZ) - 7;
+    const y = ground - player.jump;
+    const size = 44;
 
- // Dirt details scrolling by
- for(let i=0;i<30;i++){
-   let x=((i*53-world*.9)%(W+20)+W+20)%(W+20)-10;
-   rect(x,ground+20+(i%4)*17,8+(i%3)*3,2,"#a0a071");
- }
+    // Shadow
+    ctx.fillStyle = "#36f5ff";
+    ctx.globalAlpha = Math.max(.12, .28 - player.jump/450);
+    ctx.beginPath();
+    ctx.ellipse(x, ground+3, 29, 8, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
 
- // Player: little explorer with scarf
- ctx.fillStyle="#26352f";
- ctx.beginPath();ctx.ellipse(player.x+17,ground+2,24,5,0,0,Math.PI*2);ctx.fill();
- // legs
- let runPhase=running&&player.grounded?Math.sin(world*.025)*8:0;
- rect(player.x+7,player.y+31,8,17,"#3e4038");
- rect(player.x+21,player.y+31,8,17,"#3e4038");
- rect(player.x+5+runPhase,player.y+43,13,5,"#262c27");
- rect(player.x+18-runPhase,player.y+43,13,5,"#262c27");
- // coat
- rect(player.x+5,player.y+16,25,24,"#6b7953");
- // scarf
- rect(player.x+3,player.y+17,29,6,"#b65e43");
- // head
- ctx.fillStyle="#d8ae85";ctx.beginPath();ctx.arc(player.x+18,player.y+10,11,0,Math.PI*2);ctx.fill();
- // hair
- ctx.fillStyle="#483a2e";ctx.beginPath();ctx.arc(player.x+18,player.y+6,11,Math.PI,Math.PI*2);ctx.fill();
- rect(player.x+24,player.y+9,3,3,"#252820");
+    // Cube runner with bright core
+    cube(x, y, size, "#36f5ff");
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "#a66bff";
+    ctx.fillStyle = "#c9ffff";
+    ctx.fillRect(x-5, y-size*.72, 10, 5);
+    ctx.shadowBlur = 0;
 
- // obstacles
- obstacles.forEach(o=>{
-   if(o.type==="log"){
-     ctx.fillStyle="#694a32";ctx.fillRect(o.x,o.y,o.w,o.h);
-     ctx.fillStyle="#a17b4e";ctx.beginPath();ctx.ellipse(o.x+o.w-2,o.y+o.h/2,6,o.h/2,0,0,Math.PI*2);ctx.fill();
-     ctx.strokeStyle="#4d3829";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(o.x+o.w-2,o.y+o.h/2,3,o.h/3,0,0,Math.PI*2);ctx.stroke();
-   }else{
-     ctx.fillStyle="#737b70";ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.2,o.y+o.h*.3);ctx.lineTo(o.x+o.w*.55,o.y);ctx.lineTo(o.x+o.w,o.y+o.h*.7);ctx.closePath();ctx.fill();
-     ctx.fillStyle="#aab2a0";ctx.beginPath();ctx.moveTo(o.x+o.w*.2,o.y+o.h*.3);ctx.lineTo(o.x+o.w*.55,o.y);ctx.lineTo(o.x+o.w*.7,o.y+o.h*.5);ctx.closePath();ctx.fill();
-   }
- });
- dust.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life*2);rect(p.x,p.y,4,3,"#e8d5a2");ctx.globalAlpha=1});
-}
+    // Motion trails
+    ctx.strokeStyle = "#36f5ff";
+    ctx.globalAlpha = .35;
+    ctx.lineWidth = 2;
+    for (let i=0;i<3;i++) {
+      ctx.beginPath();
+      ctx.moveTo(x-size*.45-i*7, y-10+i*7);
+      ctx.lineTo(x-size*1.1-i*8, y-8+i*7);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
 
-function loop(now){
- if(!running)return;
- const dt=Math.min((now-last)/1000,.03);last=now;
- score+=dt*speed/12;
- speed=Math.min(620,320+score*.42);
- world+=speed*dt;
- player.vy+=1750*dt;player.y+=player.vy*dt;
- if(player.y>=ground-player.h){player.y=ground-player.h;player.vy=0;player.grounded=true}
- spawn-=dt;
- if(spawn<=0){
-   const type=Math.random()<.55?"log":"rock";
-   const h=type==="log"?27+Math.random()*9:24+Math.random()*22;
-   const w=type==="log"?42+Math.random()*22:27+Math.random()*17;
-   obstacles.push({x:W+20,y:ground-h,w,h,type});
-   spawn=Math.max(.7,1.45-Math.random()*.45-score*.0005);
- }
- obstacles.forEach(o=>o.x-=speed*dt);
- obstacles=obstacles.filter(o=>o.x+o.w>0);
- dust.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=200*dt;p.life-=dt});
- dust=dust.filter(p=>p.life>0);
+  function drawObstacles() {
+    obstacles.sort((a,b) => a.z-b.z);
+    for (const o of obstacles) {
+      const z = Math.min(1, o.z);
+      const x = roadX(o.lane, z);
+      const y = roadY(z);
+      const size = 12 + z*57;
+      cube(x, y, size, o.color);
+    }
+  }
 
- for(const o of obstacles){
-   const pad=7;
-   if(player.x+player.w-pad>o.x+4&&player.x+pad<o.x+o.w-3&&player.y+player.h-4>o.y+5){
-     finish();break;
-   }
- }
- if(Math.floor(score)>best){
-   best=Math.floor(score);bestText.textContent=best+" m";
-   try{localStorage.setItem("sigviaForestBest",best)}catch(e){}
- }
- scoreText.textContent=Math.floor(score)+" m";
- draw();
- if(running)requestAnimationFrame(loop);
-}
+  function spawnObstacle() {
+    const lane = [-1,0,1][Math.floor(Math.random()*3)];
+    obstacles.push({
+      lane,
+      z: 0.02,
+      color: Math.random() > .5 ? "#a66bff" : "#ff4fba"
+    });
+  }
 
-startButton.addEventListener("click",reset);
-document.getElementById("jump").addEventListener("click",jump);
-document.getElementById("restart").addEventListener("click",reset);
-canvas.addEventListener("pointerdown",jump);
-document.addEventListener("keydown",e=>{
- if(["Space","ArrowUp","KeyW"].includes(e.code)){e.preventDefault();if(!e.repeat)jump()}
- if(e.code==="KeyR")reset();
-});
-draw();
+  function burst(x, y) {
+    for (let i=0;i<25;i++) {
+      particles.push({
+        x,y,
+        vx:(Math.random()-.5)*330,
+        vy:(Math.random()-.6)*300,
+        life:.6 + Math.random()*.5
+      });
+    }
+  }
+
+  function drawParticles(dt) {
+    particles = particles.filter(p => p.life > 0);
+    for (const p of particles) {
+      p.x += p.vx*dt;
+      p.y += p.vy*dt;
+      p.vy += 400*dt;
+      p.life -= dt;
+      ctx.globalAlpha = Math.max(0,p.life);
+      ctx.fillStyle = "#36f5ff";
+      ctx.fillRect(p.x,p.y,4,4);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function update(dt) {
+    score += dt * 100 * (speed / .38);
+    speed = Math.min(.83, .38 + score / 18000);
+    player.visualLane += (player.lane - player.visualLane) * Math.min(1, dt*12);
+
+    if (player.jump > 0 || player.velocity > 0) {
+      player.jump += player.velocity * dt;
+      player.velocity -= 1150 * dt;
+      if (player.jump <= 0) {
+        player.jump = 0;
+        player.velocity = 0;
+      }
+    }
+
+    spawnTimer -= dt;
+    if (spawnTimer <= 0) {
+      spawnObstacle();
+      spawnTimer = Math.max(.48, 1.12 - speed*.65) + Math.random()*.35;
+    }
+
+    for (const o of obstacles) {
+      o.z += speed * dt;
+      if (o.z > .83 && o.z < .99 && o.lane === player.lane && player.jump < 65) {
+        endGame();
+        return;
+      }
+    }
+    obstacles = obstacles.filter(o => o.z < 1.08);
+
+    $("score").textContent = String(Math.floor(score)).padStart(5, "0");
+    $("speed").textContent = (speed/.38).toFixed(1) + "x";
+  }
+
+  function render(dt) {
+    drawBackground(dt);
+    drawObstacles();
+    drawPlayer();
+    drawParticles(dt);
+  }
+
+  function loop(time) {
+    const dt = Math.min((time-lastTime)/1000 || 0, .035);
+    lastTime = time;
+    if (running) update(dt);
+    render(dt);
+    requestAnimationFrame(loop);
+  }
+
+  function startGame() {
+    score = 0;
+    speed = .38;
+    spawnTimer = .7;
+    obstacles = [];
+    particles = [];
+    player.lane = 0;
+    player.visualLane = 0;
+    player.jump = 0;
+    player.velocity = 0;
+    running = true;
+    $("overlay").classList.add("hidden");
+  }
+
+  function endGame() {
+    running = false;
+    best = Math.max(best, Math.floor(score));
+    try { localStorage.setItem("sigviaRunnerBest", best); } catch {}
+    $("best").textContent = String(best).padStart(5, "0");
+    $("overlayTitle").textContent = "RUN TERMINATED";
+    $("overlayText").textContent =
+      "Score: " + Math.floor(score) + " — " +
+      (Math.floor(score) >= best ? "Ny rekord!" : "Prøv igjen og slå rekorden din.");
+    $("start").textContent = "RUN AGAIN";
+    $("overlay").classList.remove("hidden");
+    burst(roadX(player.lane, playerZ), roadY(playerZ)-40);
+  }
+
+  function move(dir) {
+    if (!running) return;
+    player.lane = Math.max(-1, Math.min(1, player.lane + dir));
+  }
+
+  function jump() {
+    if (running && player.jump === 0) player.velocity = 470;
+  }
+
+  document.addEventListener("keydown", e => {
+    if (["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key)) e.preventDefault();
+    if (e.repeat) return;
+    if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") move(-1);
+    if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") move(1);
+    if (e.key === "ArrowUp" || e.key === " " || e.key.toLowerCase() === "w") {
+      if (!running) startGame();
+      else jump();
+    }
+  });
+
+  $("start").addEventListener("click", startGame);
+  $("left").addEventListener("click", () => move(-1));
+  $("right").addEventListener("click", () => move(1));
+  $("jump").addEventListener("click", () => running ? jump() : startGame());
+
+  // Tap left/right side to change lane; tap middle to jump
+  canvas.addEventListener("pointerdown", e => {
+    if (!running) return;
+    const r = canvas.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width;
+    if (x < .33) move(-1);
+    else if (x > .67) move(1);
+    else jump();
+  });
+
+  render(0);
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
