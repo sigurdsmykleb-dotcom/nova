@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyber Runner | SIGVIA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#171b20;color:#f5f0df;font-family:system-ui,Arial,sans-serif}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;background:#20262b}
+header a{color:#f5f0df;text-decoration:none}
+.logo{font-weight:900;letter-spacing:4px;font-size:1.3rem}
+nav a{margin-left:18px;color:#c8c9bf}
+main{width:min(1000px,94%);margin:35px auto}
+h1{font-size:clamp(2rem,5vw,3.5rem);margin:4px 0}
+.sub{color:#b6b9ae}
+.hud{display:flex;gap:12px;margin:20px 0}
+.stat{background:#282f32;border:1px solid #48514d;border-radius:9px;padding:10px 18px}
+.stat small{display:block;color:#b6b9ae;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
+.stat strong{font-size:1.3rem}
+.stage{position:relative;overflow:hidden;border:2px solid #687064;border-radius:12px;background:#a7b58b}
+canvas{display:block;width:100%;height:auto;touch-action:manipulation}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:#17201bbd;padding:20px}
+.overlay.hidden{display:none}
+.dialog{max-width:390px;background:#252d29;border:1px solid #687064;border-radius:14px;padding:26px}
+.dialog h2{font-size:2rem;margin:0 0 8px}
+.dialog p{color:#d0d6c8;line-height:1.6}
+button{background:#d4c58a;color:#252820;border:0;border-radius:7px;padding:12px 20px;font-size:1rem;font-weight:800;cursor:pointer}
+button:hover{background:#e8d9a1}
+.controls{display:flex;gap:10px;margin-top:12px}
+.controls button{flex:1}
+.help{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#aeb4a8;font-size:.85rem;margin-top:14px}
+footer{text-align:center;padding:25px;color:#939c91;font-size:.8rem}
+@media(max-width:600px){header{padding:16px 4%}nav a{margin-left:8px;font-size:.85rem}.hud{gap:6px}.stat{padding:8px 12px}main{margin:24px auto}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html">SIGVIA</a>
+  <nav><a href="index.html">Home</a><a href="games.html">Games</a></nav>
+</header>
+
+<main>
+  <p style="color:#d4c58a;letter-spacing:3px;font-size:.75rem">ARCADE / ENDLESS RUNNER</p>
+  <h1>Cyber Runner</h1>
+  <p class="sub">A forgotten forest. One path. How far can you run?</p>
+
+  <div class="hud">
+    <div class="stat"><small>Distance</small><strong id="score">0 m</strong></div>
+    <div class="stat"><small>Best</small><strong id="best">0 m</strong></div>
+  </div>
+
+  <div class="stage">
+    <canvas id="game" width="900" height="440"></canvas>
+    <div class="overlay" id="overlay">
+      <div class="dialog">
+        <h2 id="title">Into the Wild</h2>
+        <p id="message">Run through the forest, jump over fallen logs and rocks, and beat your distance record.</p>
+        <button id="start">Start running</button>
+        <p style="font-size:.8rem;margin-bottom:0">SPACE / ↑ / W to jump</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="jump">JUMP ↑</button>
+    <button id="restart">RESTART ↻</button>
+  </div>
+  <div class="help"><span>SPACE · ↑ · W = Jump</span><span>Tap the game to jump on mobile</span></div>
+</main>
+<footer>SIGVIA ARCADE · One more run?</footer>
+
+<script>
+(() => {
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+const scoreText=document.getElementById("score");
+const bestText=document.getElementById("best");
+const overlay=document.getElementById("overlay");
+const title=document.getElementById("title");
+const message=document.getElementById("message");
+const startButton=document.getElementById("start");
+const W=900,H=440,ground=345;
+
+let running=false,dead=false,score=0,best=0,speed=320,last=0,spawn=0;
+let obstacles=[],clouds=[],dust=[],world=0;
+const player={x:115,y:ground-48,w:34,h:48,vy:0,grounded:true};
+
+try{best=Number(localStorage.getItem("sigviaForestBest"))||0}catch(e){}
+bestText.textContent=best+" m";
+
+for(let i=0;i<7;i++)clouds.push({x:i*170+Math.random()*60,y:35+Math.random()*100,w:55+Math.random()*70});
+
+function reset(){
+ score=0;speed=320;spawn=1;obstacles=[];dust=[];
+ player.y=ground-player.h;player.vy=0;player.grounded=true;
+ dead=false;running=true;world=0;
+ overlay.classList.add("hidden");
+ last=performance.now();
+ requestAnimationFrame(loop);
+}
+
+function jump(){
+ if(!running){if(!dead)reset();return}
+ if(player.grounded){
+   player.vy=-690;
+   player.grounded=false;
+   for(let i=0;i<7;i++)dust.push({x:player.x+15,y:ground,vx:(Math.random()-.5)*100,vy:-Math.random()*100,life:.4});
+ }
+}
+
+function finish(){
+ running=false;dead=true;
+ title.textContent="The forest wins";
+ message.textContent="You ran "+Math.floor(score)+" metres. Take a breath and try to beat your record.";
+ startButton.textContent="Run again";
+ overlay.classList.remove("hidden");
+}
+
+function rect(x,y,w,h,color){
+ ctx.fillStyle=color;ctx.fillRect(x,y,w,h);
+}
+
+function tree(x,y,scale,color){
+ rect(x-5*scale,y-30*scale,10*scale,30*scale,"#4b4030");
+ ctx.fillStyle=color;
+ ctx.beginPath();ctx.moveTo(x,y-90*scale);ctx.lineTo(x-31*scale,y-24*scale);ctx.lineTo(x+31*scale,y-24*scale);ctx.closePath();ctx.fill();
+ ctx.beginPath();ctx.moveTo(x,y-65*scale);ctx.lineTo(x-37*scale,y-4*scale);ctx.lineTo(x+37*scale,y-4*scale);ctx.closePath();ctx.fill();
+}
+
+function draw(){
+ ctx.clearRect(0,0,W,H);
+
+ // Early-morning sky
+ let sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,"#a9c4bc");
+ sky.addColorStop(.65,"#d4d4ad");
+ sky.addColorStop(1,"#e0c995");
+ ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+
+ // Pale sun
+ ctx.fillStyle="#f2e5b4";
+ ctx.beginPath();ctx.arc(690,100,39,0,Math.PI*2);ctx.fill();
+
+ // Distant hills
+ ctx.fillStyle="#829b80";
+ ctx.beginPath();ctx.moveTo(0,265);
+ for(let x=0;x<=W;x+=60)ctx.lineTo(x,230+Math.sin(x*.012+world*.0004)*35);
+ ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+
+ // Forest silhouettes
+ for(let i=0;i<12;i++){
+   let x=((i*100-world*.22)%(W+140)+W+140)%(W+140)-60;
+   tree(x,ground-12,.72,"#526d56");
+ }
+ // Ground
+ rect(0,ground,W,H-ground,"#6c7550");
+ rect(0,ground,W,5,"#414d3c");
+
+ // Dirt details scrolling by
+ for(let i=0;i<30;i++){
+   let x=((i*53-world*.9)%(W+20)+W+20)%(W+20)-10;
+   rect(x,ground+20+(i%4)*17,8+(i%3)*3,2,"#a0a071");
+ }
+
+ // Player: little explorer with scarf
+ ctx.fillStyle="#26352f";
+ ctx.beginPath();ctx.ellipse(player.x+17,ground+2,24,5,0,0,Math.PI*2);ctx.fill();
+ // legs
+ let runPhase=running&&player.grounded?Math.sin(world*.025)*8:0;
+ rect(player.x+7,player.y+31,8,17,"#3e4038");
+ rect(player.x+21,player.y+31,8,17,"#3e4038");
+ rect(player.x+5+runPhase,player.y+43,13,5,"#262c27");
+ rect(player.x+18-runPhase,player.y+43,13,5,"#262c27");
+ // coat
+ rect(player.x+5,player.y+16,25,24,"#6b7953");
+ // scarf
+ rect(player.x+3,player.y+17,29,6,"#b65e43");
+ // head
+ ctx.fillStyle="#d8ae85";ctx.beginPath();ctx.arc(player.x+18,player.y+10,11,0,Math.PI*2);ctx.fill();
+ // hair
+ ctx.fillStyle="#483a2e";ctx.beginPath();ctx.arc(player.x+18,player.y+6,11,Math.PI,Math.PI*2);ctx.fill();
+ rect(player.x+24,player.y+9,3,3,"#252820");
+
+ // obstacles
+ obstacles.forEach(o=>{
+   if(o.type==="log"){
+     ctx.fillStyle="#694a32";ctx.fillRect(o.x,o.y,o.w,o.h);
+     ctx.fillStyle="#a17b4e";ctx.beginPath();ctx.ellipse(o.x+o.w-2,o.y+o.h/2,6,o.h/2,0,0,Math.PI*2);ctx.fill();
+     ctx.strokeStyle="#4d3829";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(o.x+o.w-2,o.y+o.h/2,3,o.h/3,0,0,Math.PI*2);ctx.stroke();
+   }else{
+     ctx.fillStyle="#737b70";ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.2,o.y+o.h*.3);ctx.lineTo(o.x+o.w*.55,o.y);ctx.lineTo(o.x+o.w,o.y+o.h*.7);ctx.closePath();ctx.fill();
+     ctx.fillStyle="#aab2a0";ctx.beginPath();ctx.moveTo(o.x+o.w*.2,o.y+o.h*.3);ctx.lineTo(o.x+o.w*.55,o.y);ctx.lineTo(o.x+o.w*.7,o.y+o.h*.5);ctx.closePath();ctx.fill();
+   }
+ });
+ dust.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life*2);rect(p.x,p.y,4,3,"#e8d5a2");ctx.globalAlpha=1});
+}
+
+function loop(now){
+ if(!running)return;
+ const dt=Math.min((now-last)/1000,.03);last=now;
+ score+=dt*speed/12;
+ speed=Math.min(620,320+score*.42);
+ world+=speed*dt;
+ player.vy+=1750*dt;player.y+=player.vy*dt;
+ if(player.y>=ground-player.h){player.y=ground-player.h;player.vy=0;player.grounded=true}
+ spawn-=dt;
+ if(spawn<=0){
+   const type=Math.random()<.55?"log":"rock";
+   const h=type==="log"?27+Math.random()*9:24+Math.random()*22;
+   const w=type==="log"?42+Math.random()*22:27+Math.random()*17;
+   obstacles.push({x:W+20,y:ground-h,w,h,type});
+   spawn=Math.max(.7,1.45-Math.random()*.45-score*.0005);
+ }
+ obstacles.forEach(o=>o.x-=speed*dt);
+ obstacles=obstacles.filter(o=>o.x+o.w>0);
+ dust.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=200*dt;p.life-=dt});
+ dust=dust.filter(p=>p.life>0);
+
+ for(const o of obstacles){
+   const pad=7;
+   if(player.x+player.w-pad>o.x+4&&player.x+pad<o.x+o.w-3&&player.y+player.h-4>o.y+5){
+     finish();break;
+   }
+ }
+ if(Math.floor(score)>best){
+   best=Math.floor(score);bestText.textContent=best+" m";
+   try{localStorage.setItem("sigviaForestBest",best)}catch(e){}
+ }
+ scoreText.textContent=Math.floor(score)+" m";
+ draw();
+ if(running)requestAnimationFrame(loop);
+}
+
+startButton.addEventListener("click",reset);
+document.getElementById("jump").addEventListener("click",jump);
+document.getElementById("restart").addEventListener("click",reset);
+canvas.addEventListener("pointerdown",jump);
+document.addEventListener("keydown",e=>{
+ if(["Space","ArrowUp","KeyW"].includes(e.code)){e.preventDefault();if(!e.repeat)jump()}
+ if(e.code==="KeyR")reset();
+});
+draw();
+})();
+</script>
+</body>
+</html>
