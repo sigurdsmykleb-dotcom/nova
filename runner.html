@@ -2,184 +2,221 @@
 <!DOCTYPE html>
 <html lang="nn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cyber Runner | SIGVIA</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;800&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGVIA | Cyber Runner 3D</title>
 
-:root {
-  --cyan: #36f5ff;
-  --purple: #a66bff;
-  --bg: #050711;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: #f4f7ff;
-  background:
-    radial-gradient(ellipse at 50% 0%, #17204a 0%, transparent 55%),
-    var(--bg);
-  font-family: Inter, sans-serif;
-}
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 6%;
-  border-bottom: 1px solid #263052;
-}
-.logo {
-  color: var(--cyan);
-  font: 900 22px Orbitron, sans-serif;
-  text-decoration: none;
-  letter-spacing: 3px;
-}
-nav { display: flex; gap: 20px; }
-nav a {
-  color: #b8c1df;
-  text-decoration: none;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-}
-nav a:hover { color: var(--cyan); }
-main { width: min(1050px, 94%); margin: 35px auto; }
-.heading { text-align: center; margin-bottom: 22px; }
-.eyebrow {
-  color: var(--cyan);
-  font-size: 11px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-}
-h1 {
-  margin: 10px 0;
-  font: 900 clamp(30px, 6vw, 56px) Orbitron, sans-serif;
-  letter-spacing: 2px;
-  text-shadow: 0 0 24px #36f5ff55;
-}
-.heading p { color: #9ba7cb; font-size: 14px; }
-.game-shell {
-  padding: 12px;
-  border: 1px solid #34436c;
-  border-radius: 18px;
-  background: #0a0e1d;
-  box-shadow: 0 0 45px #413cff17, 0 0 30px #36f5ff0b;
-}
-.hud {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 8px 14px;
-}
-.stat small {
-  display: block;
-  color: #8e9aba;
-  font-size: 9px;
-  letter-spacing: 2px;
-}
-.stat strong {
-  display: block;
-  margin-top: 4px;
-  font: 700 19px Orbitron, sans-serif;
-}
-#score { color: var(--cyan); }
-#best { color: #c6a4ff; }
-#speed { color: #fff; }
-.stage {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #24365c;
-  border-radius: 10px;
-  background: #070b1b;
-}
-canvas {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-}
-.overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
-  background: #050711b8;
-  backdrop-filter: blur(5px);
-}
-.overlay.hidden { display: none; }
-.overlay h2 {
-  margin: 0 0 12px;
-  color: var(--cyan);
-  font: 900 clamp(24px, 5vw, 42px) Orbitron, sans-serif;
-  text-shadow: 0 0 25px #36f5ff77;
-}
-.overlay p {
-  max-width: 390px;
-  color: #c0c9e5;
-  line-height: 1.7;
-  font-size: 13px;
-}
-button {
-  border: 0;
-  border-radius: 8px;
-  padding: 13px 22px;
-  color: #051018;
-  background: var(--cyan);
-  font: 800 12px Orbitron, sans-serif;
-  letter-spacing: 1px;
-  cursor: pointer;
-  box-shadow: 0 0 22px #36f5ff33;
-}
-button:hover { filter: brightness(1.15); transform: translateY(-1px); }
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 4px 3px;
-  color: #a8b4d4;
-  font-size: 11px;
-}
-kbd {
-  padding: 4px 7px;
-  border: 1px solid #34436c;
-  border-radius: 5px;
-  color: #e9f5ff;
-  background: #121a31;
-}
-.mobile-controls {
-  display: none;
-  justify-content: center;
-  gap: 14px;
-  padding-top: 14px;
-}
-.mobile-controls button { width: 75px; font-size: 20px; padding: 12px; }
-footer {
-  padding: 25px;
-  text-align: center;
-  color: #64708f;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
-@media(max-width:600px) {
-  header { padding: 17px 5%; }
-  nav { gap: 10px; }
-  nav a { font-size: 9px; letter-spacing: 0; }
-  .mobile-controls { display: flex; }
-  .controls { justify-content: center; text-align: center; }
-  .game-shell { padding: 7px; }
-  .hud { padding: 8px 4px 12px; }
-  .stat strong { font-size: 15px; }
-}
-</style>
+  <style>
+    :root {
+      --cyan: #36f5ff;
+      --purple: #a66bff;
+      --bg: #050711;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #f4f7ff;
+      background:
+        radial-gradient(ellipse at 50% 0%, #17204a, transparent 60%),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6%;
+      border-bottom: 1px solid #263052;
+    }
+
+    .logo {
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-decoration: none;
+    }
+
+    nav { display: flex; gap: 20px; }
+
+    nav a {
+      color: #b8c1df;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    nav a:hover { color: var(--cyan); }
+
+    main {
+      width: min(1100px, 95%);
+      margin: 30px auto;
+    }
+
+    .heading { text-align: center; margin-bottom: 20px; }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: clamp(30px, 6vw, 55px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-shadow: 0 0 25px #36f5ff55;
+    }
+
+    .heading p { color: #a6b2d0; font-size: 14px; }
+
+    .game-shell {
+      padding: 12px;
+      border: 1px solid #34436c;
+      border-radius: 16px;
+      background: #090d1b;
+      box-shadow: 0 0 40px #36f5ff12;
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 5px 15px;
+    }
+
+    .stat small {
+      display: block;
+      color: #929fbe;
+      font-size: 9px;
+      letter-spacing: 2px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 19px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #score { color: var(--cyan); }
+    #best { color: #c6a4ff; }
+    #speed { color: white; }
+
+    #game-area {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #26375c;
+      border-radius: 10px;
+      background: #070b18;
+      min-height: 240px;
+    }
+
+    #game-area canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      background: #050711bb;
+      backdrop-filter: blur(5px);
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h2 {
+      margin: 10px 0;
+      color: var(--cyan);
+      font-size: clamp(23px, 5vw, 40px);
+      text-shadow: 0 0 22px #36f5ff66;
+    }
+
+    .overlay p {
+      max-width: 380px;
+      color: #c2cce5;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    button {
+      padding: 13px 22px;
+      border: 0;
+      border-radius: 7px;
+      color: #061018;
+      background: var(--cyan);
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.15); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 15px 4px 3px;
+      color: #a8b4d4;
+      font-size: 11px;
+    }
+
+    kbd {
+      padding: 4px 6px;
+      border: 1px solid #34436c;
+      border-radius: 4px;
+      background: #121a31;
+      color: white;
+    }
+
+    .mobile-controls {
+      display: none;
+      justify-content: center;
+      gap: 12px;
+      padding-top: 14px;
+    }
+
+    .mobile-controls button {
+      width: 75px;
+      font-size: 22px;
+      padding: 12px;
+    }
+
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #64708f;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 16px 4%; }
+      nav { gap: 10px; }
+      nav a { font-size: 10px; }
+      .mobile-controls { display: flex; }
+      .controls { justify-content: center; text-align: center; }
+      .game-shell { padding: 7px; }
+      .stat strong { font-size: 15px; }
+    }
+  </style>
 </head>
+
 <body>
 <header>
   <a class="logo" href="index.html">SIGVIA</a>
@@ -192,33 +229,45 @@ footer {
 
 <main>
   <section class="heading">
-    <div class="eyebrow">SIGVIA ARCADE / 002</div>
-    <h1>CYBER RUNNER</h1>
-    <p>Enter the grid. Dodge the cubes. Beat the system.</p>
+    <div class="eyebrow">SIGVIA ARCADE / GAME 002</div>
+    <h1>CYBER RUNNER 3D</h1>
+    <p>Enter the grid. Dodge the obstacles. Beat your record.</p>
   </section>
 
   <section class="game-shell">
     <div class="hud">
-      <div class="stat"><small>SCORE</small><strong id="score">00000</strong></div>
-      <div class="stat"><small>BEST</small><strong id="best">00000</strong></div>
-      <div class="stat"><small>SPEED</small><strong id="speed">1.0x</strong></div>
+      <div class="stat">
+        <small>SCORE</small>
+        <strong id="score">00000</strong>
+      </div>
+      <div class="stat">
+        <small>BEST</small>
+        <strong id="best">00000</strong>
+      </div>
+      <div class="stat">
+        <small>SPEED</small>
+        <strong id="speed">1.0x</strong>
+      </div>
     </div>
 
-    <div class="stage">
-      <canvas id="game" width="960" height="540"></canvas>
+    <div id="game-area">
       <div class="overlay" id="overlay">
-        <div class="eyebrow">SYSTEM ONLINE</div>
-        <h2 id="overlayTitle">READY TO RUN?</h2>
-        <p id="overlayText">Byt fil mellom tre baner og hopp over dei glødande kubane. Kor lenge klarer du deg?</p>
+        <div class="eyebrow">3D SYSTEM ONLINE</div>
+        <h2 id="overlay-title">READY TO RUN?</h2>
+        <p id="overlay-text">
+          Spring gjennom den digitale verda.
+          Byt bane og hopp over dei glødande hindera.
+        </p>
         <button id="start">START RUN</button>
       </div>
     </div>
 
     <div class="controls">
       <span><kbd>A</kbd> <kbd>D</kbd> / <kbd>←</kbd> <kbd>→</kbd> BYT BANE</span>
-      <span><kbd>SPACE</kbd> <kbd>↑</kbd> HOPP</span>
-      <span>UNNGÅ KUBANE. OVERLEV.</span>
+      <span><kbd>SPACE</kbd> / <kbd>↑</kbd> HOPP</span>
+      <span>UNNGÅ KUBANE!</span>
     </div>
+
     <div class="mobile-controls">
       <button id="left" aria-label="Venstre">←</button>
       <button id="jump" aria-label="Hopp">↑</button>
@@ -229,332 +278,416 @@ footer {
 
 <footer>© 2026 SIGVIA — RUN THE GRID.</footer>
 
+<!-- Three.js: biblioteket som lagar ekte 3D-grafikk -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
 (() => {
-  const canvas = document.getElementById("game");
-  const ctx = canvas.getContext("2d");
-  const $ = id => document.getElementById(id);
-  const W = canvas.width, H = canvas.height;
-  const horizon = 115;
-  const playerZ = 0.88;
+  const area = document.getElementById("game-area");
+  const overlay = document.getElementById("overlay");
+  const startButton = document.getElementById("start");
 
-  let running = false;
-  let lastTime = 0;
-  let score = 0;
-  let speed = 0.38;
-  let spawnTimer = 0;
-  let obstacles = [];
-  let particles = [];
-  let roadOffset = 0;
-  let best = 0;
-  try { best = Number(localStorage.getItem("sigviaRunnerBest")) || 0; }
-  catch {}
-  $("best").textContent = String(best).padStart(5, "0");
-
-  const player = { lane: 0, visualLane: 0, jump: 0, velocity: 0 };
-
-  function roadX(lane, z) {
-    const t = Math.max(0, Math.min(1, z));
-    const width = 55 + t * 570;
-    const center = W / 2;
-    return center + lane * width * 0.34;
+  if (!window.THREE) {
+    document.getElementById("overlay-title").textContent =
+      "3D LIBRARY UNAVAILABLE";
+    document.getElementById("overlay-text").textContent =
+      "Spelet treng internett for å laste 3D-biblioteket. Oppdater sida og prøv igjen.";
+    startButton.style.display = "none";
+    return;
   }
 
-  function roadY(z) {
-    return horizon + Math.pow(Math.max(0, z), 1.55) * (H - horizon + 30);
-  }
+  const THREE = window.THREE;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x070b1b);
+  scene.fog = new THREE.Fog(0x070b1b, 35, 115);
 
-  function poly(points, fill, stroke, lineWidth = 1) {
-    ctx.beginPath();
-    points.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
-    ctx.closePath();
-    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lineWidth; ctx.stroke(); }
-  }
+  const camera = new THREE.PerspectiveCamera(65, 16 / 9, 0.1, 180);
+  camera.position.set(0, 5.5, 10);
 
-  function cube(x, y, size, color, glow = true) {
-    const s = size;
-    const d = s * 0.34;
-    if (glow) {
-      ctx.shadowBlur = s * 0.6;
-      ctx.shadowColor = color;
-    }
-    poly([[x-s/2,y-s],[x-s/2+d,y-s-d],[x+s/2+d,y-s-d],[x+s/2,y-s]],
-      "#1b3d60", color, Math.max(1, s * .025));
-    poly([[x+s/2,y-s],[x+s/2+d,y-s-d],[x+s/2+d,y-d],[x+s/2,y]],
-      "#15264c", color, Math.max(1, s * .025));
-    poly([[x-s/2,y-s],[x+s/2,y-s],[x+s/2,y],[x-s/2,y]],
-      "#102039", color, Math.max(1, s * .025));
-    ctx.shadowBlur = 0;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = Math.max(1, s * .025);
-    ctx.strokeRect(x-s*.31, y-s*.78, s*.62, s*.55);
-    ctx.fillStyle = color;
-    ctx.globalAlpha = .12;
-    ctx.fillRect(x-s*.31, y-s*.78, s*.62, s*.55);
-    ctx.globalAlpha = 1;
-  }
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: "high-performance"
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+  renderer.setSize(area.clientWidth, area.clientHeight || 500);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.25;
+  area.prepend(renderer.domElement);
 
-  function drawBackground(dt) {
-    const sky = ctx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, "#080d26");
-    sky.addColorStop(.55, "#101532");
-    sky.addColorStop(1, "#070b18");
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, H);
+  // Lys
+  scene.add(new THREE.HemisphereLight(0x91caff, 0x17102d, 2));
 
-    // Distant digital skyline
-    for (let i = 0; i < 22; i++) {
-      const x = i * 49 - 10;
-      const height = 25 + (i * 37 % 90);
-      ctx.fillStyle = i % 2 ? "#101a39" : "#12132f";
-      ctx.fillRect(x, horizon - height, 35, height);
-      ctx.fillStyle = i % 3 ? "#285a80" : "#8c53e8";
-      ctx.globalAlpha = .5;
-      for (let j = 0; j < 4; j++)
-        ctx.fillRect(x + 7 + (j%2)*12, horizon-height+10+j*13, 3, 5);
-      ctx.globalAlpha = 1;
-    }
+  const mainLight = new THREE.DirectionalLight(0xffffff, 2.2);
+  mainLight.position.set(-4, 10, 5);
+  scene.add(mainLight);
 
-    // Road perspective
-    poly([[W/2-24,horizon],[W/2+24,horizon],[W*.96,H],[W*.04,H]], "#0b1226", "#26345b", 2);
+  const cyanLight = new THREE.PointLight(0x20ddff, 24, 35);
+  cyanLight.position.set(0, 4, -12);
+  scene.add(cyanLight);
 
-    roadOffset = (roadOffset + dt * speed * 0.8) % 1;
-    for (let i = 0; i < 18; i++) {
-      let z = (i / 18 + roadOffset) % 1;
-      const y = roadY(z);
-      const half = 24 + z * (W*.46 - 24);
-      const x = W/2;
-      ctx.strokeStyle = `rgba(54,245,255,${.12 + z*.55})`;
-      ctx.lineWidth = 1 + z * 2;
-      ctx.beginPath();
-      ctx.moveTo(x-half, y);
-      ctx.lineTo(x+half, y);
-      ctx.stroke();
-    }
+  const purpleLight = new THREE.PointLight(0x8c36ff, 18, 30);
+  purpleLight.position.set(5, 3, -30);
+  scene.add(purpleLight);
 
-    // Lane guides
-    for (const laneLine of [-.5, .5]) {
-      ctx.strokeStyle = "#36f5ff";
-      ctx.globalAlpha = .2;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(W/2 + laneLine*48, horizon);
-      ctx.lineTo(W/2 + laneLine*W*.7, H);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-    }
-
-    // Neon roadside pylons
-    for (let i = 0; i < 12; i++) {
-      const z = (i / 12 + roadOffset) % 1;
-      const y = roadY(z);
-      const half = 24 + z * (W*.46 - 24);
-      const size = 2 + z*13;
-      for (const side of [-1, 1]) {
-        const x = W/2 + side * (half + size*1.4);
-        ctx.fillStyle = i%2 ? "#a66bff" : "#36f5ff";
-        ctx.shadowBlur = size*2;
-        ctx.shadowColor = ctx.fillStyle;
-        ctx.fillRect(x-size/3, y-size*2, size/1.5, size*2);
-        ctx.shadowBlur = 0;
-      }
-    }
-  }
-
-  function drawPlayer() {
-    const x = roadX(player.visualLane, playerZ);
-    const ground = roadY(playerZ) - 7;
-    const y = ground - player.jump;
-    const size = 44;
-
-    // Shadow
-    ctx.fillStyle = "#36f5ff";
-    ctx.globalAlpha = Math.max(.12, .28 - player.jump/450);
-    ctx.beginPath();
-    ctx.ellipse(x, ground+3, 29, 8, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-
-    // Cube runner with bright core
-    cube(x, y, size, "#36f5ff");
-    ctx.shadowBlur = 18;
-    ctx.shadowColor = "#a66bff";
-    ctx.fillStyle = "#c9ffff";
-    ctx.fillRect(x-5, y-size*.72, 10, 5);
-    ctx.shadowBlur = 0;
-
-    // Motion trails
-    ctx.strokeStyle = "#36f5ff";
-    ctx.globalAlpha = .35;
-    ctx.lineWidth = 2;
-    for (let i=0;i<3;i++) {
-      ctx.beginPath();
-      ctx.moveTo(x-size*.45-i*7, y-10+i*7);
-      ctx.lineTo(x-size*1.1-i*8, y-8+i*7);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-  }
-
-  function drawObstacles() {
-    obstacles.sort((a,b) => a.z-b.z);
-    for (const o of obstacles) {
-      const z = Math.min(1, o.z);
-      const x = roadX(o.lane, z);
-      const y = roadY(z);
-      const size = 12 + z*57;
-      cube(x, y, size, o.color);
-    }
-  }
-
-  function spawnObstacle() {
-    const lane = [-1,0,1][Math.floor(Math.random()*3)];
-    obstacles.push({
-      lane,
-      z: 0.02,
-      color: Math.random() > .5 ? "#a66bff" : "#ff4fba"
+  function material(color, emissive = color, strength = 0.3) {
+    return new THREE.MeshStandardMaterial({
+      color,
+      emissive,
+      emissiveIntensity: strength,
+      roughness: 0.38,
+      metalness: 0.4
     });
   }
 
-  function burst(x, y) {
-    for (let i=0;i<25;i++) {
-      particles.push({
-        x,y,
-        vx:(Math.random()-.5)*330,
-        vy:(Math.random()-.6)*300,
-        life:.6 + Math.random()*.5
-      });
+  const cyan = material(0x21dfff, 0x00dfff, 1.4);
+  const purple = material(0x914aff, 0x731bff, 1.2);
+  const pink = material(0xff3bbf, 0xff1493, 1.2);
+  const dark = material(0x10182e, 0x111e44, 0.6);
+  const white = material(0xd9ffff, 0x65faff, 0.9);
+
+  // Veg og tre baner
+  const road = new THREE.Mesh(
+    new THREE.BoxGeometry(10, 0.3, 125),
+    material(0x0b1125, 0x101a38, 0.6)
+  );
+  road.position.set(0, -0.2, -42);
+  scene.add(road);
+
+  const grid = new THREE.GridHelper(125, 65, 0x176d98, 0x18304c);
+  grid.position.set(0, -0.035, -42);
+  scene.add(grid);
+
+  // Lysande kantar og baneskilje
+  const edgeMaterial = new THREE.MeshBasicMaterial({ color: 0x36f5ff });
+  const purpleEdge = new THREE.MeshBasicMaterial({ color: 0xa66bff });
+
+  function makeLine(x, y, z, width, height, depth, mat) {
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(width, height, depth),
+      mat
+    );
+    mesh.position.set(x, y, z);
+    scene.add(mesh);
+    return mesh;
+  }
+
+  makeLine(-4.9, 0.04, -42, 0.07, 0.08, 125, edgeMaterial);
+  makeLine(4.9, 0.04, -42, 0.07, 0.08, 125, edgeMaterial);
+  makeLine(-1.62, 0.01, -42, 0.025, 0.025, 125, purpleEdge);
+  makeLine(1.62, 0.01, -42, 0.025, 0.025, 125, purpleEdge);
+
+  // Stipla lys som flyttar seg mot spelaren
+  const dashes = [];
+  for (const x of [-1.62, 1.62]) {
+    for (let i = 0; i < 18; i++) {
+      const dash = makeLine(
+        x, 0.035, -105 + i * 6,
+        0.045, 0.045, 2.2, edgeMaterial
+      );
+      dashes.push(dash);
     }
   }
 
-  function drawParticles(dt) {
-    particles = particles.filter(p => p.life > 0);
-    for (const p of particles) {
-      p.x += p.vx*dt;
-      p.y += p.vy*dt;
-      p.vy += 400*dt;
-      p.life -= dt;
-      ctx.globalAlpha = Math.max(0,p.life);
-      ctx.fillStyle = "#36f5ff";
-      ctx.fillRect(p.x,p.y,4,4);
+  // Futuristiske bygningar langs vegen
+  const buildings = [];
+  for (let side of [-1, 1]) {
+    for (let i = 0; i < 18; i++) {
+      const height = 3 + Math.random() * 12;
+      const width = 1.5 + Math.random() * 2.5;
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(width, height, 2 + Math.random() * 4),
+        i % 3 === 0 ? purple : dark
+      );
+      mesh.position.set(
+        side * (7 + Math.random() * 5),
+        height / 2 - 0.1,
+        -105 + i * 6.2
+      );
+      scene.add(mesh);
+      buildings.push({ mesh, side });
     }
-    ctx.globalAlpha = 1;
   }
 
-  function update(dt) {
-    score += dt * 100 * (speed / .38);
-    speed = Math.min(.83, .38 + score / 18000);
-    player.visualLane += (player.lane - player.visualLane) * Math.min(1, dt*12);
-
-    if (player.jump > 0 || player.velocity > 0) {
-      player.jump += player.velocity * dt;
-      player.velocity -= 1150 * dt;
-      if (player.jump <= 0) {
-        player.jump = 0;
-        player.velocity = 0;
-      }
+  // Dekorative lys langs vegkanten
+  const roadsideLights = [];
+  for (let i = 0; i < 20; i++) {
+    for (const side of [-1, 1]) {
+      const lamp = new THREE.Mesh(
+        new THREE.BoxGeometry(0.12, 1.5, 0.12),
+        i % 2 ? cyan : purple
+      );
+      lamp.position.set(side * 5.5, 0.75, -100 + i * 5.5);
+      scene.add(lamp);
+      roadsideLights.push(lamp);
     }
-
-    spawnTimer -= dt;
-    if (spawnTimer <= 0) {
-      spawnObstacle();
-      spawnTimer = Math.max(.48, 1.12 - speed*.65) + Math.random()*.35;
-    }
-
-    for (const o of obstacles) {
-      o.z += speed * dt;
-      if (o.z > .83 && o.z < .99 && o.lane === player.lane && player.jump < 65) {
-        endGame();
-        return;
-      }
-    }
-    obstacles = obstacles.filter(o => o.z < 1.08);
-
-    $("score").textContent = String(Math.floor(score)).padStart(5, "0");
-    $("speed").textContent = (speed/.38).toFixed(1) + "x";
   }
 
-  function render(dt) {
-    drawBackground(dt);
-    drawObstacles();
-    drawPlayer();
-    drawParticles(dt);
+  // Spelarkube med glødande detaljar
+  const player = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.85, 0.85), cyan);
+  body.position.y = 0.7;
+  player.add(body);
+
+  const core = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.42), white);
+  core.position.set(0, 0.73, -0.44);
+  player.add(core);
+
+  const stripe = new THREE.Mesh(
+    new THREE.BoxGeometry(0.9, 0.08, 0.92),
+    purple
+  );
+  stripe.position.y = 0.42;
+  player.add(stripe);
+
+  player.position.set(0, 0, 3);
+  scene.add(player);
+
+  const shadow = new THREE.Mesh(
+    new THREE.CircleGeometry(0.75, 24),
+    new THREE.MeshBasicMaterial({
+      color: 0x36f5ff,
+      transparent: true,
+      opacity: 0.22
+    })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.set(0, 0.015, 3);
+  scene.add(shadow);
+
+  // Hinder
+  const obstacles = [];
+  const laneX = [-3.15, 0, 3.15];
+
+  function createObstacle() {
+    const lane = Math.floor(Math.random() * 3) - 1;
+    const isTall = Math.random() > 0.48;
+    const size = isTall ? 1.45 : 1.1;
+
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(size, size, size),
+      Math.random() > 0.5 ? pink : purple
+    );
+    mesh.position.set(laneX[lane + 1], size / 2, -75);
+
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(mesh.geometry),
+      new THREE.LineBasicMaterial({ color: 0xffffff })
+    );
+    mesh.add(edges);
+    scene.add(mesh);
+
+    obstacles.push({
+      mesh,
+      lane,
+      size,
+      passed: false
+    });
   }
 
-  function loop(time) {
-    const dt = Math.min((time-lastTime)/1000 || 0, .035);
-    lastTime = time;
-    if (running) update(dt);
-    render(dt);
-    requestAnimationFrame(loop);
-  }
+  let running = false;
+  let score = 0;
+  let best = 0;
+  let speed = 18;
+  let spawnTimer = 0;
+  let jumpHeight = 0;
+  let jumpVelocity = 0;
+  let targetLane = 0;
+  let lastTime = 0;
+  let animationId = 0;
 
-  function startGame() {
-    score = 0;
-    speed = .38;
-    spawnTimer = .7;
-    obstacles = [];
-    particles = [];
-    player.lane = 0;
-    player.visualLane = 0;
-    player.jump = 0;
-    player.velocity = 0;
-    running = true;
-    $("overlay").classList.add("hidden");
-  }
+  try {
+    best = Number(localStorage.getItem("sigvia3DBest")) || 0;
+  } catch {}
 
-  function endGame() {
-    running = false;
-    best = Math.max(best, Math.floor(score));
-    try { localStorage.setItem("sigviaRunnerBest", best); } catch {}
-    $("best").textContent = String(best).padStart(5, "0");
-    $("overlayTitle").textContent = "RUN TERMINATED";
-    $("overlayText").textContent =
-      "Score: " + Math.floor(score) + " — " +
-      (Math.floor(score) >= best ? "Ny rekord!" : "Prøv igjen og slå rekorden din.");
-    $("start").textContent = "RUN AGAIN";
-    $("overlay").classList.remove("hidden");
-    burst(roadX(player.lane, playerZ), roadY(playerZ)-40);
-  }
+  const scoreEl = document.getElementById("score");
+  const bestEl = document.getElementById("best");
+  const speedEl = document.getElementById("speed");
+  bestEl.textContent = String(best).padStart(5, "0");
 
-  function move(dir) {
+  function moveLane(direction) {
     if (!running) return;
-    player.lane = Math.max(-1, Math.min(1, player.lane + dir));
+    targetLane = Math.max(-1, Math.min(1, targetLane + direction));
   }
 
   function jump() {
-    if (running && player.jump === 0) player.velocity = 470;
+    if (!running || jumpHeight > 0) return;
+    jumpVelocity = 10.5;
   }
 
+  function clearObstacles() {
+    for (const obstacle of obstacles) scene.remove(obstacle.mesh);
+    obstacles.length = 0;
+  }
+
+  function startGame() {
+    clearObstacles();
+    score = 0;
+    speed = 18;
+    spawnTimer = 0.8;
+    jumpHeight = 0;
+    jumpVelocity = 0;
+    targetLane = 0;
+    player.position.set(0, 0, 3);
+    player.rotation.set(0, 0, 0);
+    running = true;
+
+    document.getElementById("overlay-title").textContent = "READY TO RUN?";
+    document.getElementById("overlay-text").textContent =
+      "Byt bane og hopp over hindera. Kor lenge klarer du deg?";
+    startButton.textContent = "RESTART";
+    overlay.classList.add("hidden");
+  }
+
+  function endGame() {
+    if (!running) return;
+    running = false;
+
+    best = Math.max(best, Math.floor(score));
+    try { localStorage.setItem("sigvia3DBest", String(best)); } catch {}
+
+    bestEl.textContent = String(best).padStart(5, "0");
+    document.getElementById("overlay-title").textContent = "RUN TERMINATED";
+    document.getElementById("overlay-text").textContent =
+      "Poeng: " + Math.floor(score) + ". Trykk under for å prøve igjen!";
+    startButton.textContent = "RUN AGAIN";
+    overlay.classList.remove("hidden");
+  }
+
+  function update(dt) {
+    score += dt * speed * 2.5;
+    speed = Math.min(39, 18 + score * 0.035);
+
+    scoreEl.textContent = String(Math.floor(score)).padStart(5, "0");
+    speedEl.textContent = (speed / 18).toFixed(1) + "x";
+
+    // Glidande rørsle mellom banene
+    const wantedX = laneX[targetLane + 1];
+    player.position.x += (wantedX - player.position.x) * Math.min(1, dt * 12);
+
+    // Hoppfysikk
+    if (jumpVelocity !== 0 || jumpHeight > 0) {
+      jumpHeight += jumpVelocity * dt;
+      jumpVelocity -= 27 * dt;
+
+      if (jumpHeight <= 0) {
+        jumpHeight = 0;
+        jumpVelocity = 0;
+      }
+    }
+
+    player.position.y = jumpHeight;
+    player.rotation.z = (wantedX - player.position.x) * 0.045;
+    shadow.position.x = player.position.x;
+    shadow.scale.setScalar(1 - Math.min(jumpHeight / 10, 0.45));
+
+    // Kameraet følgjer spelaren frå bak og litt over
+    camera.position.x += (player.position.x * 0.48 - camera.position.x)
+      * Math.min(1, dt * 3.5);
+    camera.position.y = 5.4 + jumpHeight * 0.12;
+    camera.lookAt(player.position.x * 0.25, 0.7, -7);
+
+    // Veglinjer og lys kjem mot spelaren
+    for (const dash of dashes) {
+      dash.position.z += speed * dt;
+      if (dash.position.z > 7) dash.position.z -= 108;
+    }
+
+    for (const lamp of roadsideLights) {
+      lamp.position.z += speed * dt;
+      if (lamp.position.z > 7) lamp.position.z -= 110;
+    }
+
+    // Bygningane rullar forbi
+    for (const item of buildings) {
+      item.mesh.position.z += speed * dt * 0.75;
+      if (item.mesh.position.z > 12) item.mesh.position.z -= 112;
+    }
+
+    // Nye hinder
+    spawnTimer -= dt;
+    if (spawnTimer <= 0) {
+      createObstacle();
+      spawnTimer = Math.max(0.65, 1.25 - (speed - 18) * 0.018)
+        + Math.random() * 0.25;
+    }
+
+    // Flytt hinder og sjekk kollisjon
+    for (const obstacle of obstacles) {
+      obstacle.mesh.position.z += speed * dt;
+      obstacle.mesh.rotation.y += dt * 0.65;
+
+      const closeZ = Math.abs(obstacle.mesh.position.z - player.position.z) < 1.15;
+      const sameLane = Math.abs(obstacle.mesh.position.x - player.position.x) < 1.25;
+      const notJumping = jumpHeight < 1.35;
+
+      if (!obstacle.passed && closeZ && sameLane && notJumping) {
+        endGame();
+        break;
+      }
+
+      if (!obstacle.passed && obstacle.mesh.position.z > player.position.z + 1.5) {
+        obstacle.passed = true;
+        score += 20;
+      }
+    }
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+      if (obstacles[i].mesh.position.z > 12) {
+        scene.remove(obstacles[i].mesh);
+        obstacles.splice(i, 1);
+      }
+    }
+  }
+
+  // Tastatur
   document.addEventListener("keydown", e => {
-    if (["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key)) e.preventDefault();
+    const key = e.key.toLowerCase();
+    if (["arrowleft", "arrowright", "arrowup", " "].includes(key)) {
+      e.preventDefault();
+    }
     if (e.repeat) return;
-    if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") move(-1);
-    if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") move(1);
-    if (e.key === "ArrowUp" || e.key === " " || e.key.toLowerCase() === "w") {
+
+    if (key === "arrowleft" || key === "a") moveLane(-1);
+    if (key === "arrowright" || key === "d") moveLane(1);
+
+    if (key === "arrowup" || key === "w" || key === " ") {
       if (!running) startGame();
       else jump();
     }
   });
 
-  $("start").addEventListener("click", startGame);
-  $("left").addEventListener("click", () => move(-1));
-  $("right").addEventListener("click", () => move(1));
-  $("jump").addEventListener("click", () => running ? jump() : startGame());
-
-  // Tap left/right side to change lane; tap middle to jump
-  canvas.addEventListener("pointerdown", e => {
-    if (!running) return;
-    const r = canvas.getBoundingClientRect();
-    const x = (e.clientX-r.left)/r.width;
-    if (x < .33) move(-1);
-    else if (x > .67) move(1);
+  startButton.addEventListener("click", startGame);
+  document.getElementById("left").addEventListener("click", () => moveLane(-1));
+  document.getElementById("right").addEventListener("click", () => moveLane(1));
+  document.getElementById("jump").addEventListener("click", () => {
+    if (!running) startGame();
     else jump();
   });
 
-  render(0);
-  requestAnimationFrame(loop);
+  // Tilpass 3D-biletet til vindauget
+  function resize() {
+    const width = area.clientWidth;
+    const height = Math.max(260, Math.round(width * 9 / 16));
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  function animate(time) {
+    animationId = requestAnimationFrame(animate);
+    const dt = Math.min((time - lastTime) / 1000 || 0, 0.04);
+    lastTime = time;
+
+    if (running) update(dt);
+
+    renderer.render(scene, camera);
+  }
+
+  requestAnimationFrame(animate);
 })();
 </script>
 </body>
