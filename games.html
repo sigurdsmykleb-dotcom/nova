@@ -1,796 +1,510 @@
 
 <!DOCTYPE html>
-<html lang="nn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#080b12">
-<title>SIGVIA | Neon Drift</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070914">
 
-<style>
-:root {
-  --cyan: #53eaff;
-  --purple: #9b7bff;
-  --bg: #080b12;
-}
-* { box-sizing: border-box; }
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  background: var(--bg);
-  color: white;
-  font-family: Inter, Arial, sans-serif;
-}
-button { font: inherit; cursor: pointer; }
-#game { position: fixed; inset: 0; }
-#game canvas { display: block; width: 100%; height: 100%; }
-#hud {
-  position: fixed; inset: 0;
-  pointer-events: none;
-  display: none;
-}
-.glass {
-  background: rgba(8, 12, 23, .78);
-  border: 1px solid rgba(83, 234, 255, .25);
-  box-shadow: 0 0 24px rgba(0, 170, 255, .08);
-  backdrop-filter: blur(12px);
-  border-radius: 13px;
-}
-.topbar {
-  position: absolute; top: 14px; left: 14px; right: 14px;
-  display: flex; justify-content: space-between; align-items: flex-start;
-  gap: 10px;
-}
-.brand { padding: 12px 15px; }
-.brand strong { letter-spacing: 4px; font-size: 17px; }
-.brand small { display: block; color: var(--cyan); letter-spacing: 2px; margin-top: 4px; }
-.stats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.stat { padding: 10px 13px; min-width: 85px; }
-.stat small { display: block; color: #9aa9c6; font-size: 10px; letter-spacing: 1px; }
-.stat strong { display: block; margin-top: 5px; font-size: 18px; }
-#speed { color: var(--cyan); font-size: 25px; }
-.bottom-ui {
-  position: absolute; left: 16px; right: 16px; bottom: 16px;
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
-}
-.meter { width: min(260px, 38vw); padding: 12px; }
-.meter-label { display: flex; justify-content: space-between; font-size: 11px; color: #b9c8e4; margin-bottom: 8px; }
-.bar { height: 8px; background: #20283b; border-radius: 10px; overflow: hidden; }
-.bar > div { height: 100%; width: 100%; background: linear-gradient(90deg, #38c9ff, #a57bff); transition: width .1s; }
-#driftText { color: #ffdc84; font-weight: 800; letter-spacing: 2px; font-size: 13px; }
-.hud-buttons { display: flex; gap: 7px; pointer-events: auto; }
-.ui-button {
-  color: white; border: 1px solid #34425b;
-  background: rgba(12, 18, 32, .88); border-radius: 9px;
-  padding: 11px 13px;
-}
-.ui-button:hover { border-color: var(--cyan); }
-#mobile {
-  display: none; position: fixed; inset: 0;
-  pointer-events: none;
-}
-.pad { position: absolute; bottom: 20px; display: flex; gap: 9px; pointer-events: auto; }
-.pad.left { left: 16px; }
-.pad.right { right: 16px; align-items: flex-end; }
-.touch {
-  width: 59px; height: 59px; border-radius: 17px;
-  border: 1px solid rgba(255,255,255,.35);
-  background: rgba(8,14,28,.7); color: white;
-  font-size: 22px; touch-action: none; user-select: none;
-}
-.touch.action { width: 68px; height: 68px; font-size: 12px; font-weight: 800; }
-.touch.active, .touch:active { background: rgba(83,234,255,.32); border-color: var(--cyan); }
-#overlay {
-  position: fixed; inset: 0; z-index: 5;
-  display: grid; place-items: center; padding: 20px;
-  background: radial-gradient(ellipse at 50% 35%, rgba(38,76,120,.2), rgba(3,5,12,.84));
-}
-.menu {
-  width: min(520px, 100%); padding: clamp(22px, 5vw, 40px);
-  text-align: center; border-radius: 20px;
-  background: rgba(7,11,21,.91);
-  border: 1px solid rgba(83,234,255,.32);
-  box-shadow: 0 0 70px rgba(0,130,255,.12);
-}
-.kicker { color: var(--cyan); letter-spacing: 5px; font-size: 11px; font-weight: 800; }
-h1 { font-size: clamp(42px, 10vw, 76px); line-height: .95; margin: 17px 0; letter-spacing: -3px; }
-h1 span { color: var(--cyan); text-shadow: 0 0 25px rgba(83,234,255,.4); }
-.subtitle { color: #a8b5cb; line-height: 1.65; font-size: 14px; }
-.primary {
-  display: block; width: 100%; padding: 16px; margin-top: 22px;
-  border: 0; border-radius: 10px; color: #051018; font-weight: 900;
-  letter-spacing: 2px; background: linear-gradient(100deg, #53eaff, #9b7bff);
-}
-.menu-row { display: flex; gap: 10px; margin-top: 10px; }
-.menu-row button { flex: 1; }
-.settings { display: flex; gap: 10px; margin-top: 12px; }
-.settings select { flex: 1; min-width: 0; padding: 10px; color: white; background: #111a2b; border: 1px solid #33425b; border-radius: 8px; }
-#message { color: #ffdc84; min-height: 20px; font-size: 12px; margin-top: 10px; }
-#result { color: #b9c8e4; font-size: 13px; line-height: 1.8; }
-@media (max-width: 700px) {
-  .topbar { top: 8px; left: 8px; right: 8px; }
-  .brand { padding: 9px; }
-  .brand strong { font-size: 13px; letter-spacing: 2px; }
-  .brand small { font-size: 8px; }
-  .stat { min-width: 61px; padding: 8px; }
-  .stat small { font-size: 8px; }
-  .stat strong { font-size: 14px; }
-  #speed { font-size: 20px; }
-  .bottom-ui { left: 8px; right: 8px; bottom: 10px; }
-  .meter { width: 40vw; padding: 9px; }
-  .hud-buttons { gap: 4px; }
-  .ui-button { padding: 9px; font-size: 11px; }
-}
-@media (pointer: coarse) {
-  #mobile { display: block; }
-  .bottom-ui { bottom: 98px; }
-  .pad { bottom: 17px; }
-}
-</style>
+  <title>Games | SIGVIA</title>
+  <meta name="description" content="Play free browser games at SIGVIA. Explore Space Shooter, Cyber Runner and Neon Drift.">
+
+  <link rel="stylesheet" href="site.css">
+
+  <style>
+    :root {
+      --bg: #070914;
+      --panel: #101528;
+      --cyan: #53eaff;
+      --purple: #9b7bff;
+      --text: #f4f7ff;
+      --muted: #a4afc8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 15% 5%, #18244b 0, transparent 36%),
+        radial-gradient(ellipse at 90% 40%, #21113d 0, transparent 35%),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .games-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 7%;
+      background: rgba(7, 9, 20, 0.85);
+      border-bottom: 1px solid rgba(83, 234, 255, 0.18);
+      backdrop-filter: blur(18px);
+    }
+
+    .logo {
+      color: var(--cyan);
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-decoration: none;
+      text-shadow: 0 0 20px rgba(83, 234, 255, 0.35);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--cyan);
+    }
+
+    .hero {
+      position: relative;
+      padding: 95px 20px 55px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 9px 15px;
+      color: var(--cyan);
+      background: rgba(83, 234, 255, 0.07);
+      border: 1px solid rgba(83, 234, 255, 0.25);
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+
+    .hero h1 {
+      margin: 24px 0 15px;
+      font-size: clamp(43px, 8vw, 82px);
+      font-weight: 950;
+      letter-spacing: -3px;
+      line-height: 1;
+    }
+
+    .hero h1 span {
+      color: var(--cyan);
+      text-shadow: 0 0 35px rgba(83, 234, 255, 0.24);
+    }
+
+    .hero p {
+      max-width: 540px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .game-count {
+      margin-top: 26px;
+      color: #7886a5;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .games-section {
+      width: min(1120px, 88%);
+      margin: 0 auto;
+      padding: 15px 0 100px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: 1px;
+    }
+
+    .section-heading span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .game-card {
+      --accent: var(--cyan);
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 330px;
+      flex-direction: column;
+      align-items: flex-start;
+      overflow: hidden;
+      padding: 28px;
+      color: var(--text);
+      text-decoration: none;
+      background:
+        radial-gradient(ellipse at 100% 0%, rgba(83, 234, 255, 0.12), transparent 55%),
+        linear-gradient(145deg, #121a30, #0a0d19 75%);
+      border: 1px solid rgba(143, 166, 210, 0.2);
+      border-radius: 20px;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+      isolation: isolate;
+    }
+
+    .game-card::before {
+      position: absolute;
+      z-index: -1;
+      top: -90px;
+      right: -90px;
+      width: 220px;
+      height: 220px;
+      content: "";
+      background: var(--accent);
+      opacity: 0.08;
+      filter: blur(55px);
+      border-radius: 50%;
+      transition: opacity 0.25s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .game-card:hover::before {
+      opacity: 0.2;
+    }
+
+    .space-card {
+      --accent: #53eaff;
+    }
+
+    .runner-card {
+      --accent: #a3ff75;
+    }
+
+    .drift-card {
+      --accent: #b18aff;
+    }
+
+    .game-top {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .game-number {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .game-status {
+      padding: 7px 10px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 9%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      border-radius: 20px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .game-icon {
+      display: grid;
+      width: 75px;
+      height: 75px;
+      margin: 27px 0 18px;
+      place-items: center;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+      border-radius: 19px;
+      font-size: 37px;
+      box-shadow: inset 0 0 25px color-mix(in srgb, var(--accent) 5%, transparent);
+    }
+
+    .game-card h3 {
+      margin: 0 0 12px;
+      font-size: clamp(21px, 3vw, 29px);
+      font-weight: 950;
+      letter-spacing: 1px;
+    }
+
+    .game-card p {
+      max-width: 420px;
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .game-bottom {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(143, 166, 210, 0.15);
+    }
+
+    .game-type {
+      color: #8491ad;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .play-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .featured {
+      grid-column: 1 / -1;
+      min-height: 300px;
+      background:
+        radial-gradient(ellipse at 90% 10%, rgba(177, 138, 255, 0.2), transparent 48%),
+        radial-gradient(ellipse at 10% 100%, rgba(83, 234, 255, 0.08), transparent 45%),
+        linear-gradient(135deg, #131a32, #090c18 75%);
+    }
+
+    .featured .game-icon {
+      width: 85px;
+      height: 85px;
+      font-size: 42px;
+    }
+
+    .featured h3 {
+      font-size: clamp(28px, 4vw, 38px);
+    }
+
+    .site-footer {
+      padding: 30px 20px;
+      text-align: center;
+      color: #6f7b96;
+      border-top: 1px solid rgba(143, 166, 210, 0.12);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .site-footer strong {
+      color: var(--cyan);
+      letter-spacing: 3px;
+    }
+
+    @media (max-width: 650px) {
+      .games-nav {
+        padding: 17px 5%;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
+      .nav-links a {
+        font-size: 11px;
+      }
+
+      .hero {
+        padding-top: 65px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .games-section {
+        width: 90%;
+      }
+
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .featured {
+        grid-column: auto;
+      }
+
+      .game-card {
+        min-height: 315px;
+        padding: 23px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div id="game"></div>
+  <header class="games-nav">
+    <a class="logo" href="index.html">SIGVIA</a>
 
-<div id="hud">
-  <div class="topbar">
-    <div class="brand glass"><strong>SIGVIA</strong><small>NEON DRIFT / 01</small></div>
-    <div class="stats">
-      <div class="stat glass"><small>SPEED</small><strong id="speed">0</strong></div>
-      <div class="stat glass"><small>DRIFT SCORE</small><strong id="score">0</strong></div>
-      <div class="stat glass"><small>BEST</small><strong id="best">0</strong></div>
-    </div>
-  </div>
-  <div class="bottom-ui">
-    <div class="meter glass">
-      <div class="meter-label"><span>NITRO</span><span id="nitroText">100%</span></div>
-      <div class="bar"><div id="nitroBar"></div></div>
-      <div class="meter-label" style="margin-top:10px"><span id="driftText">READY TO DRIVE</span><span id="gear">GEAR 1</span></div>
-    </div>
-    <div class="hud-buttons">
-      <button class="ui-button" id="cameraBtn">CAM C</button>
-      <button class="ui-button" id="soundBtn">SOUND ON</button>
-      <button class="ui-button" id="pauseBtn">PAUSE P</button>
-    </div>
-  </div>
-</div>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="games.html" class="active">Games</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-<div id="mobile">
-  <div class="pad left">
-    <button class="touch" data-control="left">◀</button>
-    <button class="touch" data-control="right">▶</button>
-  </div>
-  <div class="pad right">
-    <button class="touch action" data-control="brake">BRAKE<br>DRIFT</button>
-    <button class="touch action" data-control="nitro">NITRO</button>
-    <button class="touch action" data-control="gas">GAS</button>
-  </div>
-</div>
+  <main>
+    <section class="hero">
+      <span class="eyebrow">THE SIGVIA ARCADE</span>
 
-<div id="overlay">
-  <div class="menu">
-    <div class="kicker">SIGVIA ORIGINAL</div>
-    <h1>NEON <span>DRIFT</span></h1>
-    <p class="subtitle">
-      Take the line. Break traction. Own the road.<br>
-      A 3D arcade racing experience.
-    </p>
-    <div id="result">
-      WASD / ARROWS — DRIVE<br>
-      SPACE — DRIFT &nbsp; SHIFT — NITRO<br>
-      C — CHANGE CAMERA &nbsp; P — PAUSE
-    </div>
-    <button class="primary" id="startBtn">START ENGINE</button>
-    <div class="settings">
-      <select id="cameraSelect" aria-label="Camera">
-        <option value="chase">Chase camera</option>
-        <option value="hood">Hood camera</option>
-        <option value="wide">Wide camera</option>
-      </select>
-      <select id="qualitySelect" aria-label="Graphics quality">
-        <option value="high">High graphics</option>
-        <option value="medium">Balanced graphics</option>
-        <option value="low">Performance mode</option>
-      </select>
-    </div>
-    <div id="message"></div>
-  </div>
-</div>
+      <h1>ENTER THE <span>GAME.</span></h1>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script>
-(() => {
-'use strict';
+      <p>
+        Three games. Three different experiences.
+        Choose your challenge and start playing.
+      </p>
 
-const $ = id => document.getElementById(id);
-const game = $('game');
-const overlay = $('overlay');
-const hud = $('hud');
-const mobile = $('mobile');
+      <div class="game-count">03 GAMES · FREE TO PLAY · PLAY IN YOUR BROWSER</div>
+    </section>
 
-if (!window.THREE) {
-  $('message').textContent = 'Could not load Three.js. Check your internet connection.';
-  $('startBtn').disabled = true;
-  return;
-}
+    <section class="games-section">
+      <div class="section-heading">
+        <h2>SELECT YOUR GAME</h2>
+        <span>01 — 03</span>
+      </div>
 
-let scene, camera, renderer, clock;
-let car, carBody, wheels = [], traffic = [], roadGroup;
-let running = false, paused = false, soundOn = true;
-let cameraMode = 'chase', quality = 'high';
-let speed = 0, steer = 0, yaw = 0, lateralVelocity = 0;
-let nitro = 100, score = 0, best = 0, distance = 0;
-let driftChain = 0, totalDrift = 0, crashFlash = 0;
-let audioCtx = null, engineOsc = null, engineGain = null;
-const keys = Object.create(null);
-const touch = { left:false, right:false, gas:false, brake:false, nitro:false };
-const up = new THREE.Vector3(0,1,0);
-const tmp = new THREE.Vector3();
+      <div class="games-grid">
 
-const config = {
-  roadWidth: 18,
-  curveA: 155,
-  curveB: 112,
-  carMax: 58,
-  acceleration: 23,
-  braking: 35,
-  grip: 2.5
-};
+        <!-- GAME 001: SPACE SHOOTER -->
+        <a class="game-card space-card" href="game.html">
+          <div class="game-top">
+            <span class="game-number">GAME 001</span>
+            <span class="game-status">ARCADE</span>
+          </div>
 
-function makeMat(color, roughness=0.65, metalness=0) {
-  return new THREE.MeshStandardMaterial({color, roughness, metalness});
-}
-function box(parent, name, x,y,z, sx,sy,sz, material) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz), material);
-  m.name = name;
-  m.position.set(x,y,z);
-  parent.add(m);
-  return m;
-}
-function cylinder(parent, x,y,z, radius, length, material, segments=16) {
-  const m = new THREE.Mesh(new THREE.CylinderGeometry(radius,radius,length,segments),material);
-  m.position.set(x,y,z);
-  parent.add(m);
-  return m;
-}
-function init() {
-  if (renderer) return;
+          <div class="game-icon" aria-hidden="true">✦</div>
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x8cacc8);
-  scene.fog = new THREE.Fog(0x9aafc3, 180, 650);
+          <h3>SPACE SHOOTER</h3>
 
-  camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, .1, 1100);
-  camera.position.set(0,6,12);
+          <p>
+            Enter the battlefield, take control and fight your way
+            through the galaxy. How long can you survive?
+          </p>
 
-  renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, quality === 'high' ? 1.7 : 1.1));
-  renderer.setSize(innerWidth,innerHeight);
-  renderer.shadowMap.enabled = quality !== 'low';
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
-  game.appendChild(renderer.domElement);
+          <div class="game-bottom">
+            <span class="game-type">SPACE · ACTION</span>
+            <span class="play-link">PLAY NOW <span>↗</span></span>
+          </div>
+        </a>
 
-  scene.add(new THREE.HemisphereLight(0xdbeaff,0x465044,2.0));
-  const sun = new THREE.DirectionalLight(0xffefdb,3);
-  sun.position.set(-80,130,70);
-  sun.castShadow = quality !== 'low';
-  sun.shadow.mapSize.set(1024,1024);
-  sun.shadow.camera.left = -180;
-  sun.shadow.camera.right = 180;
-  sun.shadow.camera.top = 180;
-  sun.shadow.camera.bottom = -180;
-  scene.add(sun);
+        <!-- GAME 002: CYBER RUNNER -->
+        <a class="game-card runner-card" href="runner.html">
+          <div class="game-top">
+            <span class="game-number">GAME 002</span>
+            <span class="game-status">ENDLESS RUNNER</span>
+          </div>
 
-  buildWorld();
-  buildCar();
-  buildTraffic();
-  clock = new THREE.Clock();
-  animate();
-}
+          <div class="game-icon" aria-hidden="true">⚡</div>
 
-function buildWorld() {
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(1800,1800),
-    makeMat(0x4a6557,0.98)
-  );
-  ground.rotation.x = -Math.PI/2;
-  ground.position.y = -0.25;
-  ground.receiveShadow = true;
-  scene.add(ground);
+          <h3>CYBER RUNNER</h3>
 
-  roadGroup = new THREE.Group();
-  scene.add(roadGroup);
+          <p>
+            Run through a futuristic world, avoid obstacles and
+            test your reflexes. Keep moving and beat your record.
+          </p>
 
-  const N = quality === 'low' ? 180 : 320;
-  const points = [];
-  for (let i=0;i<N;i++) {
-    const t = i/N*Math.PI*2;
-    points.push(new THREE.Vector3(
-      config.curveA*Math.cos(t),
-      0,
-      config.curveB*Math.sin(t)
-    ));
-  }
-  const curve = new THREE.CatmullRomCurve3(points,true,'centripetal');
-  const samples = curve.getPoints(N*2);
-  const verts=[], uvs=[], indices=[];
-  const inner=[], outer=[];
-  for (let i=0;i<samples.length-1;i++) {
-    const p=samples[i], next=samples[i+1];
-    const tangent=next.clone().sub(p).normalize();
-    const side=new THREE.Vector3(-tangent.z,0,tangent.x);
-    for (const sign of [-1,1]) {
-      const v=p.clone().addScaledVector(side,config.roadWidth/2*sign);
-      (sign < 0 ? inner : outer).push(v);
-    }
-  }
+          <div class="game-bottom">
+            <span class="game-type">SPEED · REFLEXES</span>
+            <span class="play-link">PLAY NOW <span>↗</span></span>
+          </div>
+        </a>
 
-  // Smooth asphalt ribbon
-  for(let i=0;i<samples.length;i++){
-    const p=samples[i], next=samples[(i+1)%samples.length];
-    const tangent=next.clone().sub(p).normalize();
-    const side=new THREE.Vector3(-tangent.z,0,tangent.x);
-    const a=p.clone().addScaledVector(side,-config.roadWidth/2);
-    const b=p.clone().addScaledVector(side, config.roadWidth/2);
-    verts.push(a.x,.01,a.z,b.x,.01,b.z);
-    uvs.push(0,i/12,1,i/12);
-    if(i<samples.length-1){
-      const j=i*2;
-      indices.push(j,j+1,j+2,j+1,j+3,j+2);
-    }
-  }
-  const geo=new THREE.BufferGeometry();
-  geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
-  geo.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  const asphalt=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({
-    color:0x30343b, roughness:.91, metalness:.02, side:THREE.DoubleSide
-  }));
-  asphalt.receiveShadow=true;
-  roadGroup.add(asphalt);
+        <!-- GAME 003: NEON DRIFT -->
+        <a class="game-card drift-card featured" href="neon-drift.html">
+          <div class="game-top">
+            <span class="game-number">GAME 003 · SIGVIA ORIGINAL</span>
+            <span class="game-status">3D RACING</span>
+          </div>
 
-  // Road edge lines and intermittent centre markings
-  const edgeMat=new THREE.MeshStandardMaterial({color:0xe8e8dd,roughness:.8});
-  const centreMat=new THREE.MeshStandardMaterial({color:0xf0df9b,roughness:.8});
-  for(let i=0;i<samples.length;i++){
-    const p=samples[i], next=samples[(i+1)%samples.length];
-    const tangent=next.clone().sub(p).normalize();
-    const side=new THREE.Vector3(-tangent.z,0,tangent.x);
-    for(const sign of [-1,1]){
-      const line=box(roadGroup,'road-edge',
-        p.x+side.x*config.roadWidth*.47,.045,
-        p.z+side.z*config.roadWidth*.47,
-        .18,.035,.35,edgeMat);
-      line.rotation.y=Math.atan2(tangent.x,tangent.z);
-    }
-    if(i%5===0){
-      const mark=box(roadGroup,'centre-line',
-        p.x,.04,p.z,.18,.025,2.1,centreMat);
-      mark.rotation.y=Math.atan2(tangent.x,tangent.z);
-    }
-  }
+          <div class="game-icon" aria-hidden="true">◈</div>
 
-  // Barriers and reflectors along both sides
-  const barrierMat=makeMat(0xc7cbd0,.6,.25);
-  const redMat=new THREE.MeshStandardMaterial({color:0xff4545,emissive:0x3d0000});
-  const whiteMat=new THREE.MeshStandardMaterial({color:0xffffff,emissive:0x111111});
-  for(let i=0;i<samples.length;i+=3){
-    const p=samples[i], next=samples[(i+1)%samples.length];
-    const tangent=next.clone().sub(p).normalize();
-    const side=new THREE.Vector3(-tangent.z,0,tangent.x);
-    for(const sign of [-1,1]){
-      const x=p.x+side.x*(config.roadWidth/2+1.2)*sign;
-      const z=p.z+side.z*(config.roadWidth/2+1.2)*sign;
-      box(roadGroup,'barrier',x,.65,z,1.3,1.2,2.2,barrierMat).rotation.y=Math.atan2(tangent.x,tangent.z);
-      const reflector=box(roadGroup,'reflector',x,1.3,z,.22,.18,.25,(i%6===0)?redMat:whiteMat);
-      reflector.rotation.y=Math.atan2(tangent.x,tangent.z);
-    }
-  }
+          <h3>NEON DRIFT</h3>
 
-  // Trees and low buildings away from the track
-  const treeTrunk=makeMat(0x5b4332), leafMats=[
-    makeMat(0x285846),makeMat(0x35664c),makeMat(0x234738)
-  ];
-  const buildingMats=[0x677382,0x7e8790,0x525f70,0x9c9a90].map(c=>makeMat(c,.82));
-  const rng=(n)=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
-  for(let i=0;i<260;i++){
-    const angle=rng(i+10)*Math.PI*2;
-    const radius=215+rng(i+400)*300;
-    const x=Math.cos(angle)*radius;
-    const z=Math.sin(angle)*radius;
-    if(i%3!==0){
-      const h=5+rng(i+800)*18;
-      box(scene,'building',x,h/2,z,7+rng(i)*9,h,7+rng(i+2)*9,buildingMats[i%buildingMats.length]);
-      continue;
-    }
-    const trunk=cylinder(scene,x,1.5,z,.35,3,treeTrunk);
-    trunk.castShadow=true;
-    const crown=new THREE.Mesh(new THREE.ConeGeometry(2.7,7,7),leafMats[i%3]);
-    crown.position.set(x,5,z);
-    crown.castShadow=true;
-    scene.add(crown);
-  }
+          <p>
+            Take the line. Break traction. Own the road.
+            Hit the track in a neon-lit 3D racing experience
+            built for speed, precision and control.
+          </p>
 
-  // Start line near the western side of the circuit
-  const start=box(scene,'start-line',config.curveA,0.065,0,config.roadWidth,.035,1.5,whiteMat);
-  start.rotation.y=Math.PI/2;
-}
+          <div class="game-bottom">
+            <span class="game-type">TRUE 3D · RACING · DRIFT</span>
+            <span class="play-link">START ENGINE <span>↗</span></span>
+          </div>
+        </a>
 
-function buildCar() {
-  car=new THREE.Group();
-  scene.add(car);
+      </div>
+    </section>
+  </main>
 
-  const paint=new THREE.MeshStandardMaterial({
-    color:0x087ed0, metalness:.78, roughness:.24
-  });
-  const dark=makeMat(0x111821,.35,.3);
-  const glass=new THREE.MeshStandardMaterial({
-    color:0x142638,metalness:.55,roughness:.16
-  });
-  const rubber=makeMat(0x111214,.95);
-  const rim=new THREE.MeshStandardMaterial({color:0xcbd8e4,metalness:.9,roughness:.23});
-  const light=new THREE.MeshStandardMaterial({color:0xd8f7ff,emissive:0x8bdcff,emissiveIntensity:2});
-  const tail=new THREE.MeshStandardMaterial({color:0xff2727,emissive:0xb40000,emissiveIntensity:2});
-
-  box(car,'chassis',0,.72,0,2.05,.55,4.35,paint);
-  box(car,'front-bumper',0,.52,-2.13,1.98,.22,.25,dark);
-  box(car,'rear-bumper',0,.52,2.13,1.98,.22,.25,dark);
-  box(car,'hood',0,1.02,-1.25,1.78,.12,1.35,paint);
-  box(car,'roof',0,1.48,.15,1.45,.64,1.75,paint);
-  box(car,'windshield',0,1.47,-.77,1.36,.47,.07,glass).rotation.x=-.25;
-  box(car,'rear-glass',0,1.47,1.02,1.34,.42,.07,glass).rotation.x=.25;
-  box(car,'spoiler',0,1.52,1.9,1.7,.09,.24,dark);
-  box(car,'spoiler-leg-left',-.55,1.37,1.85,.08,.3,.08,dark);
-  box(car,'spoiler-leg-right',.55,1.37,1.85,.08,.3,.08,dark);
-
-  for(const x of [-.69,.69]){
-    box(car,'headlight',x,.78,-2.18,.43,.16,.08,light);
-    box(car,'taillight',x,.81,2.2,.43,.15,.08,tail);
-  }
-
-  wheels=[];
-  for(const x of [-1.04,1.04]){
-    for(const z of [-1.35,1.35]){
-      const w=new THREE.Group();
-      w.position.set(x,.48,z);
-      const tyre=new THREE.Mesh(new THREE.CylinderGeometry(.39,.39,.27,24),rubber);
-      tyre.rotation.z=Math.PI/2;
-      tyre.castShadow=true;
-      w.add(tyre);
-      const hub=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,.29,16),rim);
-      hub.rotation.z=Math.PI/2;
-      w.add(hub);
-      car.add(w);
-      wheels.push({group:w,x,z,front:z<0});
-    }
-  }
-
-  // Exhaust glow
-  const exhaustMat=new THREE.MeshBasicMaterial({color:0x49dfff});
-  for(const x of [-.55,.55]){
-    cylinder(car,x,.48,2.25,.085,.2,exhaustMat,12).rotation.x=Math.PI/2;
-  }
-
-  car.position.set(config.curveA,0,0);
-  yaw=Math.PI/2;
-}
-
-function buildTraffic() {
-  const colors=[0xe5e8ee,0xd83f4b,0x2caa83,0xe4b24c,0x686de0];
-  for(let i=0;i<8;i++){
-    const g=new THREE.Group();
-    const paint=makeMat(colors[i%colors.length],.3,.5);
-    const glass=makeMat(0x182b3b,.25,.4);
-    box(g,'body',0,.65,0,1.8,.5,3.8,paint);
-    box(g,'roof',0,1.05,.15,1.3,.48,1.65,glass);
-    for(const x of [-.6,.6]){
-      box(g,'headlamp',x,.72,-1.93,.24,.12,.06,
-        new THREE.MeshBasicMaterial({color:0xffffdd}));
-      box(g,'tail-lamp',x,.72,1.93,.24,.12,.06,
-        new THREE.MeshBasicMaterial({color:0xff3333}));
-    }
-    scene.add(g);
-    traffic.push({
-      mesh:g, t:(i+1)/9,
-      lane:(i%2===0?-3.3:3.3),
-      speed:13+(i%4)*2
-    });
-  }
-}
-
-function trackPoint(t) {
-  const a=t*Math.PI*2;
-  return new THREE.Vector3(config.curveA*Math.cos(a),0,config.curveB*Math.sin(a));
-}
-function trackTangent(t) {
-  return new THREE.Vector3(
-    -config.curveA*Math.sin(t*Math.PI*2),0,
-    config.curveB*Math.cos(t*Math.PI*2)
-  ).normalize();
-}
-function nearestTrackT(pos) {
-  let bestT=0, bestD=Infinity;
-  for(let i=0;i<180;i++){
-    const t=i/180;
-    const p=trackPoint(t);
-    const d=(p.x-pos.x)**2+(p.z-pos.z)**2;
-    if(d<bestD){bestD=d;bestT=t;}
-  }
-  return {t:bestT, distance:Math.sqrt(bestD)};
-}
-
-function startAudio() {
-  if(!soundOn) return;
-  try{
-    if(!audioCtx){
-      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-      engineOsc=audioCtx.createOscillator();
-      engineGain=audioCtx.createGain();
-      engineOsc.type='sawtooth';
-      engineOsc.frequency.value=55;
-      engineGain.gain.value=.012;
-      engineOsc.connect(engineGain);
-      engineGain.connect(audioCtx.destination);
-      engineOsc.start();
-    }
-    if(audioCtx.state==='suspended') audioCtx.resume();
-  }catch(e){}
-}
-function soundClick(freq=500,duration=.08,volume=.045){
-  if(!soundOn||!audioCtx)return;
-  try{
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='sine'; o.frequency.value=freq;
-    g.gain.setValueAtTime(volume,audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);
-    o.connect(g);g.connect(audioCtx.destination);
-    o.start();o.stop(audioCtx.currentTime+duration);
-  }catch(e){}
-}
-
-function begin() {
-  quality=$('qualitySelect').value;
-  cameraMode=$('cameraSelect').value;
-  if(renderer){
-    renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='high'?1.7:1.1));
-    renderer.shadowMap.enabled=quality!=='low';
-  }
-  if(!renderer)init();
-  speed=0; steer=0; lateralVelocity=0;
-  nitro=100; score=0; distance=0; driftChain=0; totalDrift=0;
-  const p=trackPoint(.25);
-  const t=trackTangent(.25);
-  car.position.set(p.x,0,p.z);
-  yaw=Math.atan2(t.x,t.z);
-  car.rotation.y=yaw;
-  for(let i=0;i<traffic.length;i++) traffic[i].t=(i+1)/9;
-  running=true; paused=false;
-  overlay.style.display='none';
-  hud.style.display='block';
-  mobile.style.display='';
-  $('pauseBtn').textContent='PAUSE P';
-  clock.getDelta();
-  startAudio();
-  soundClick(700,.12);
-}
-function pause() {
-  if(!running)return;
-  paused=!paused;
-  overlay.style.display=paused?'grid':'none';
-  hud.style.display='block';
-  $('startBtn').textContent=paused?'RESUME RACE':'START ENGINE';
-  $('result').innerHTML=paused
-    ? 'RACE PAUSED<br>Press P or Resume to continue.'
-    : '';
-  $('cameraSelect').value=cameraMode;
-  $('pauseBtn').textContent=paused?'RESUME':'PAUSE P';
-  if(!paused)clock.getDelta();
-}
-function changeCamera() {
-  cameraMode=cameraMode==='chase'?'hood':cameraMode==='hood'?'wide':'chase';
-  $('cameraSelect').value=cameraMode;
-  $('cameraBtn').textContent='CAM '+({chase:'C',hood:'H',wide:'W'}[cameraMode]);
-  soundClick(430,.05);
-}
-function update(dt) {
-  if(!running||paused)return;
-  dt=Math.min(dt,.035);
-
-  const left=keys.ArrowLeft||keys.KeyA||touch.left;
-  const right=keys.ArrowRight||keys.KeyD||touch.right;
-  const gas=keys.ArrowUp||keys.KeyW||touch.gas;
-  const brake=keys.ArrowDown||keys.KeyS||touch.brake;
-  const drifting=keys.Space||touch.brake;
-  const boosting=(keys.ShiftLeft||keys.ShiftRight||touch.nitro)&&nitro>0&&gas;
-
-  const oldSpeed=speed;
-  if(gas)speed+=config.acceleration*dt;
-  else speed-=7*dt;
-  if(brake)speed-=config.braking*dt;
-  if(boosting){speed+=27*dt;nitro=Math.max(0,nitro-26*dt);}
-  else nitro=Math.min(100,nitro+7*dt);
-  speed=THREE.MathUtils.clamp(speed,0,config.carMax+(boosting?15:0));
-
-  const steerInput=(right?1:0)-(left?1:0);
-  steer=THREE.MathUtils.damp(steer,steerInput,7,dt);
-  const speedFactor=.28+Math.min(speed/32,1.25);
-  const driftGrip=drifting?.44:1;
-  yaw+=steer*speedFactor*dt*(drifting?1.5:1);
-  lateralVelocity+=steer*speed*dt*(drifting?1.15:.28);
-  lateralVelocity*=Math.exp(-(drifting?.85:config.grip)*dt);
-  if(!drifting) lateralVelocity=THREE.MathUtils.damp(lateralVelocity,0,1.2,dt);
-
-  car.position.x+=Math.sin(yaw)*speed*dt+Math.cos(yaw)*lateralVelocity*dt;
-  car.position.z+=Math.cos(yaw)*speed*dt-Math.sin(yaw)*lateralVelocity*dt;
-  car.rotation.y=yaw;
-  car.rotation.z=THREE.MathUtils.clamp(-steer*speed/115-(drifting?steer*.13:0),-.3,.3);
-  car.rotation.x=THREE.MathUtils.clamp(lateralVelocity/90,-.07,.07);
-
-  for(const w of wheels){
-    w.group.rotation.x+=speed*dt*1.7;
-    if(w.front)w.group.rotation.y=steer*.42;
-  }
-
-  // Track boundaries: slow down off-road and gently return toward the circuit
-  const track=nearestTrackT(car.position);
-  if(track.distance>config.roadWidth*.49){
-    speed=Math.max(5,speed-24*dt);
-    crashFlash=Math.min(1,crashFlash+dt*2);
-    const target=trackPoint(track.t);
-    car.position.x=THREE.MathUtils.damp(car.position.x,target.x,.25,dt);
-    car.position.z=THREE.MathUtils.damp(car.position.z,target.z,.25,dt);
-    if(track.distance>config.roadWidth*1.7){
-      const tangent=trackTangent(track.t);
-      yaw=THREE.MathUtils.damp(yaw,Math.atan2(tangent.x,tangent.z),1.3,dt);
-    }
-  }else crashFlash=Math.max(0,crashFlash-dt*2);
-
-  // Traffic follows the circuit and uses lane offsets
-  for(const t of traffic){
-    t.t=(t.t+dt*t.speed/170) % 1;
-    const p=trackPoint(t.t), tangent=trackTangent(t.t);
-    const side=new THREE.Vector3(-tangent.z,0,tangent.x);
-    t.mesh.position.set(p.x+side.x*t.lane,.03,p.z+side.z*t.lane);
-    t.mesh.rotation.y=Math.atan2(tangent.x,tangent.z);
-
-    const dx=car.position.x-t.mesh.position.x;
-    const dz=car.position.z-t.mesh.position.z;
-    if(dx*dx+dz*dz<11 && speed>5){
-      speed*=.72;
-      score=Math.max(0,score-50);
-      soundClick(100,.18,.07);
-      t.t=(t.t+.07)%1;
-    }
-  }
-
-  const angle=Math.atan2(Math.sin(yaw-Math.atan2(trackTangent(track.t).x,trackTangent(track.t).z)),
-                         Math.cos(yaw-Math.atan2(trackTangent(track.t).x,trackTangent(track.t).z)));
-  const isDrifting=drifting&&speed>12&&Math.abs(steer)>.05 || (speed>18&&Math.abs(angle)>.24);
-  if(isDrifting){
-    const points=Math.round(speed*Math.abs(angle+steer*.35)*dt*5);
-    score+=points;driftChain+=points;totalDrift+=points;
-  }else driftChain=Math.max(0,driftChain-dt*35);
-
-  distance+=speed*dt;
-  if(engineOsc&&audioCtx&&soundOn){
-    engineOsc.frequency.setTargetAtTime(45+speed*2.5,audioCtx.currentTime,.06);
-    engineGain.gain.setTargetAtTime(.008+speed*.00022,audioCtx.currentTime,.08);
-  }
-
-  updateCamera(dt);
-  $('speed').textContent=Math.round(speed*3.6);
-  $('score').textContent=Math.floor(score).toLocaleString('en-US');
-  $('best').textContent=Math.floor(Math.max(best,score)).toLocaleString('en-US');
-  $('nitroBar').style.width=nitro+'%';
-  $('nitroText').textContent=Math.round(nitro)+'%';
-  $('driftText').textContent=isDrifting?'DRIFTING +'+Math.round(driftChain):'READY TO DRIVE';
-  $('gear').textContent='GEAR '+Math.max(1,Math.min(6,Math.floor(speed/11)+1));
-}
-
-function updateCamera(dt) {
-  let offset, lookOffset;
-  if(cameraMode==='hood'){
-    offset=new THREE.Vector3(0,2.1,-.35);
-    lookOffset=new THREE.Vector3(0,1.6,-25);
-  }else if(cameraMode==='wide'){
-    offset=new THREE.Vector3(0,16,23);
-    lookOffset=new THREE.Vector3(0,0,-8);
-  }else{
-    offset=new THREE.Vector3(0,6.3,12.5);
-    lookOffset=new THREE.Vector3(0,1.1,-7);
-  }
-  // Local car forward is -Z, so rotate camera offsets with car heading
-  offset.applyAxisAngle(up,yaw);
-  const target=car.position.clone().add(offset);
-  camera.position.lerp(target,1-Math.exp(-4.5*dt));
-  const look=car.position.clone().add(lookOffset.applyAxisAngle(up,yaw));
-  camera.lookAt(look);
-  camera.fov=THREE.MathUtils.damp(camera.fov,65+speed*.18,3,dt);
-  camera.updateProjectionMatrix();
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  if(!renderer)return;
-  const dt=clock?clock.getDelta():0;
-  update(dt);
-  if(running&&!paused){
-    // Keep the horizon stable and apply subtle speed sensation
-    scene.fog.near=quality==='low'?220:180;
-  }
-  renderer.render(scene,camera);
-}
-
-window.addEventListener('resize',()=>{
-  if(!renderer)return;
-  camera.aspect=innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio,quality==='high'?1.7:1.1));
-});
-
-window.addEventListener('keydown',e=>{
-  keys[e.code]=true;
-  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
-  if(e.repeat)return;
-  if(e.code==='KeyC')changeCamera();
-  if(e.code==='KeyP'||e.code==='Escape'){if(running)pause();}
-  if(e.code==='KeyR'&&paused)pause();
-});
-window.addEventListener('keyup',e=>{keys[e.code]=false;});
-window.addEventListener('blur',()=>{
-  for(const k in keys)keys[k]=false;
-  for(const k in touch)touch[k]=false;
-});
-
-document.querySelectorAll('[data-control]').forEach(btn=>{
-  const name=btn.dataset.control;
-  const set=(value,e)=>{
-    e.preventDefault();
-    touch[name]=value;
-    btn.classList.toggle('active',value);
-  };
-  btn.addEventListener('pointerdown',e=>{btn.setPointerCapture(e.pointerId);set(true,e);});
-  btn.addEventListener('pointerup',e=>set(false,e));
-  btn.addEventListener('pointercancel',e=>set(false,e));
-  btn.addEventListener('lostpointercapture',e=>{touch[name]=false;btn.classList.remove('active');});
-});
-
-$('startBtn').addEventListener('click',()=>{
-  if(paused){pause();startAudio();return;}
-  begin();
-});
-$('pauseBtn').addEventListener('click',pause);
-$('cameraBtn').addEventListener('click',changeCamera);
-$('cameraSelect').addEventListener('change',e=>{
-  cameraMode=e.target.value;
-  $('cameraBtn').textContent='CAM '+({chase:'C',hood:'H',wide:'W'}[cameraMode]);
-});
-$('soundBtn').addEventListener('click',()=>{
-  soundOn=!soundOn;
-  $('soundBtn').textContent=soundOn?'SOUND ON':'SOUND OFF';
-  if(engineGain&&audioCtx)engineGain.gain.setTargetAtTime(soundOn?.015:0,audioCtx.currentTime,.05);
-  if(soundOn)startAudio();
-});
-
-try{
-  best=Number(localStorage.getItem('sigvia-neon-drift-best')||0);
-}catch(e){best=0;}
-const originalUpdate=update;
-update=function(dt){
-  originalUpdate(dt);
-  if(running&&!paused&&score>best){
-    best=score;
-    try{localStorage.setItem('sigvia-neon-drift-best',String(Math.floor(best)));}catch(e){}
-  }
-};
-
-})();
-</script>
+  <footer class="site-footer">
+    <strong>SIGVIA</strong>
+    <p>BUILT FOR THE NEXT LEVEL.</p>
+    <span>© 2026 SIGVIA. ALL RIGHTS RESERVED.</span>
+  </footer>
 </body>
 </html>
