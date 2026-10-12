@@ -1,62 +1,334 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nn">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#070817">
-  <meta name="description" content="SIGVIA — futuristiske spel og digitale prosjekt.">
-  <title>SIGVA| Home</title>
+  <meta name="theme-color" content="#080a18">
+  <meta name="description" content="SIGVIA — spel, digitale prosjekt og nye ting å utforske.">
+  <title>SIGVIA | Home</title>
   <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="homepage.css">
 </head>
-<body>
-  <header>
-    <a class="logo" href="index.html">SIGVIA</a>
-    <nav aria-label="Hovudmeny">
-      <a class="active" href="index.html">HOME</a>
-      <a href="games.html">GAMES</a>
-      <a href="about.html">ABOUT</a>
-      <a href="contact.html">CONTACT</a>
-    </nav>
-  </header>
+<body class="home-page">
 
-  <main>
-    <section class="hero">
-      <div class="eyebrow">Welcome to the next level</div>
+<header class="home-header">
+  <a class="home-logo" href="index.html">SIGVIA<span>.</span></a>
+
+  <div class="header-tools">
+    <form id="site-search" class="site-search" role="search">
+      <label class="sr-only" for="search-input">Søk på SIGVIA</label>
+      <input id="search-input" type="search" placeholder="Søk på SIGVIA…">
+      <button aria-label="Søk" type="submit">
+        <svg viewBox="0 0 24 24">
+          <circle cx="10.5" cy="10.5" r="6.5"></circle>
+          <path d="m15.5 15.5 5 5"></path>
+        </svg>
+      </button>
+    </form>
+
+    <button id="menu-toggle" class="menu-toggle" type="button"
+      aria-expanded="false" aria-controls="site-menu">
+      <span>MENY</span>
+      <i><b></b><b></b></i>
+    </button>
+  </div>
+
+  <nav id="site-menu" class="site-menu" aria-label="Hovudmeny" hidden>
+    <a href="index.html">Home <span>01</span></a>
+    <a href="games.html">Games <span>02</span></a>
+    <a href="about.html">About <span>03</span></a>
+    <a href="contact.html">Contact <span>04</span></a>
+  </nav>
+</header>
+
+<div id="search-results" class="search-results" aria-live="polite" hidden></div>
+
+<main>
+  <section class="hero long-hero" id="top">
+    <div class="hero-copy">
+      <div class="eyebrow">
+        <span class="status-dot"></span>
+        WELCOME TO THE NEXT LEVEL
+      </div>
+
       <h1>ENTER THE<br><span class="gradient-text">SIGVIA UNIVERSE</span></h1>
+
       <p>
-        Ei digital verd med futuristisk design, spel og kreative prosjekt.
-        Utforsk SIGVIA og sjå kva som ventar.
+        Ei digital verd med spel, kreative prosjekt og nye ting å utforske.
+        Finn utfordringa di og gå vidare.
       </p>
-      <div class="actions">
+
+      <div class="hero-actions">
         <a class="button primary" href="games.html">EXPLORE GAMES ↗</a>
-        <a class="button" href="about.html">DISCOVER SIGVIA</a>
+        <a class="button secondary" href="#about-sigvia">DISCOVER SIGVIA</a>
       </div>
-    </section>
 
-    <section class="section">
-      <div class="eyebrow">Explore</div>
-      <h2>Choose your destination.</h2>
-      <div class="grid">
-        <article class="panel">
-          <h3>01 / GAMES</h3>
-          <p>Gå inn i speluniverset og prøv SIGVIA Space Shooter.</p>
-          <a class="contact-link" href="games.html">Open games →</a>
-        </article>
-        <article class="panel">
-          <h3>02 / ABOUT</h3>
-          <p>Lær meir om SIGVIA og ideen bak nettsida.</p>
-          <a class="contact-link" href="about.html">Discover more →</a>
-        </article>
-        <article class="panel">
-          <h3>03 / CONTACT</h3>
-          <p>Har du spørsmål eller vil du ta kontakt?</p>
-          <a class="contact-link" href="contact.html">Get in touch →</a>
-        </article>
+      <div class="hero-meta">
+        DIGITAL PROJECTS <span>·</span> GAMES <span>·</span> IDEAS
       </div>
-    </section>
-  </main>
+    </div>
 
-  <footer>© 2026 <span>SIGVIA</span> — Built for the future.</footer>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-glow"></div>
+      <div class="hero-ring ring-one"></div>
+      <div class="hero-ring ring-two"></div>
+      <div class="hero-core"></div>
+      <div class="hero-star star-one">✦</div>
+      <div class="hero-star star-two">✧</div>
+    </div>
+
+    <a class="scroll-cue" href="#about-sigvia">
+      SCROLL TO EXPLORE <span></span>
+    </a>
+  </section>
+
+  <section class="home-section intro-section" id="about-sigvia">
+    <div class="section-index">01 / ABOUT SIGVIA</div>
+
+    <div class="two-column">
+      <div>
+        <div class="eyebrow">A DIGITAL PLAYGROUND</div>
+        <h2>Made to explore.<br><span class="gradient-text">Built to create.</span></h2>
+      </div>
+
+      <div class="section-copy">
+        <p>
+          SIGVIA samlar digitale eksperiment, interaktive spel og kreative
+          idéar på éin stad. Her kan du utforske prosjekt og sjå kva som kjem vidare.
+        </p>
+        <a class="text-link" href="about.html">MEIR OM SIGVIA <span>↗</span></a>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div><strong>01</strong><span>DIGITAL UNIVERSE</span></div>
+      <div><strong>03</strong><span>GAMES TO EXPLORE</span></div>
+      <div><strong>∞</strong><span>IDEAS IN PROGRESS</span></div>
+    </div>
+  </section>
+
+  <section class="home-section games-section" id="featured">
+    <div class="section-heading">
+      <div>
+        <div class="section-index">02 / FEATURED PROJECTS</div>
+        <div class="eyebrow">PICK YOUR NEXT CHALLENGE</div>
+        <h2>Choose your destination.</h2>
+      </div>
+      <a class="text-link all-games" href="games.html">ALL GAMES <span>↗</span></a>
+    </div>
+
+    <div class="game-grid">
+      <article class="game-card">
+        <div class="game-art space-art">
+          <span class="art-label">01</span>
+          <span class="planet"></span>
+          <span class="ship">◆</span>
+        </div>
+        <div class="game-card-content">
+          <div class="game-type">ARCADE · SPACE</div>
+          <h3>Space Shooter</h3>
+          <p>Ta kontroll over romskipet og test reaksjonane dine i verdsrommet.</p>
+          <a class="text-link" href="game.html">PLAY GAME <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="game-card">
+        <div class="game-art runner-art">
+          <span class="art-label">02</span>
+          <span class="runner-sun"></span>
+          <span class="runner-floor"></span>
+          <span class="runner-person"></span>
+        </div>
+        <div class="game-card-content">
+          <div class="game-type">ACTION · REFLEX</div>
+          <h3>Cyber Runner</h3>
+          <p>Hald farten oppe, unngå hindringar og sjå kor langt du kjem.</p>
+          <a class="text-link" href="runner.html">PLAY GAME <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="game-card">
+        <div class="game-art drift-art">
+          <span class="art-label">03</span>
+          <span class="road"></span>
+          <span class="car"></span>
+        </div>
+        <div class="game-card-content">
+          <div class="game-type">RACING · SPEED</div>
+          <h3>Neon Drift</h3>
+          <p>Finn flyten gjennom svingane og hald bilen under kontroll.</p>
+          <a class="text-link" href="neon-drift.html">PLAY GAME <span>↗</span></a>
+        </div>
+      </article>
+    </div>
+
+    <a class="text-link mobile-all-games" href="games.html">VIEW ALL GAMES <span>↗</span></a>
+  </section>
+
+  <section class="statement-section">
+    <div class="statement-pattern" aria-hidden="true"></div>
+    <div class="section-index">03 / THE SIGVIA APPROACH</div>
+    <h2>Curiosity is the<br><span class="gradient-text">starting point.</span></h2>
+    <p>Frå små idéar til digitale opplevingar – SIGVIA handlar om å prøve, lære og byggje noko nytt.</p>
+    <a class="button primary" href="about.html">OUR STORY ↗</a>
+  </section>
+
+  <section class="home-section explore-section">
+    <div class="section-index">04 / EXPLORE MORE</div>
+
+    <div class="two-column explore-layout">
+      <div>
+        <div class="eyebrow">BEYOND THE GAMES</div>
+        <h2>There’s more<br>to discover.</h2>
+        <p>Vil du vite meir, utforske alle spela eller ta kontakt? Start her.</p>
+      </div>
+
+      <div class="explore-links">
+        <a href="games.html">
+          <span class="link-number">01</span>
+          <span><strong>Game library</strong><small>Utforsk alle spela</small></span>
+          <b>↗</b>
+        </a>
+        <a href="about.html">
+          <span class="link-number">02</span>
+          <span><strong>About SIGVIA</strong><small>Les om idéen bak sida</small></span>
+          <b>↗</b>
+        </a>
+        <a href="contact.html">
+          <span class="link-number">03</span>
+          <span><strong>Get in touch</strong><small>Kontakt og spørsmål</small></span>
+          <b>↗</b>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="home-footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <a class="home-logo" href="index.html">SIGVIA<span>.</span></a>
+      <p>A digital universe for games, projects and ideas.</p>
+    </div>
+
+    <div class="footer-column">
+      <h3>EXPLORE</h3>
+      <a href="index.html">Home</a>
+      <a href="games.html">Games</a>
+      <a href="about.html">About</a>
+    </div>
+
+    <div class="footer-column">
+      <h3>INFORMATION</h3>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About SIGVIA</a>
+      <a href="#top">Back to top ↑</a>
+    </div>
+
+    <div class="footer-column footer-note">
+      <h3>THE NEXT LEVEL</h3>
+      <p>Built for curiosity. Designed for discovery.</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 SIGVIA</span>
+    <span>BUILT FOR THE FUTURE.</span>
+  </div>
+</footer>
+
+<script>
+const toggle = document.getElementById('menu-toggle');
+const menu = document.getElementById('site-menu');
+
+toggle.addEventListener('click', () => {
+  const open = toggle.getAttribute('aria-expanded') === 'true';
+  toggle.setAttribute('aria-expanded', String(!open));
+  toggle.classList.toggle('is-open', !open);
+  menu.hidden = open;
+});
+
+document.addEventListener('click', event => {
+  if (!menu.hidden && !menu.contains(event.target) && !toggle.contains(event.target)) {
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.classList.remove('is-open');
+  }
+});
+
+const items = [
+  ['SIGVIA Home', 'Framside og introduksjon', 'index.html#top', 'home framside intro sigvia'],
+  ['About SIGVIA', 'Les om SIGVIA', 'about.html', 'about om oss informasjon idé prosjekt'],
+  ['Games', 'Utforsk alle spela', 'games.html', 'games spel game library'],
+  ['Space Shooter', 'Arkadespel i verdsrommet', 'game.html', 'space shooter romskip arcade'],
+  ['Cyber Runner', 'Actionspel med fart og hindringar', 'runner.html', 'cyber runner action reflex løping'],
+  ['Neon Drift', 'Racing, fart og kontroll', 'neon-drift.html', 'neon drift racing bil køyring'],
+  ['Contact', 'Kontakt SIGVIA', 'contact.html', 'contact kontakt spørsmål']
+];
+
+const form = document.getElementById('site-search');
+const input = document.getElementById('search-input');
+const results = document.getElementById('search-results');
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+
+  const query = input.value.trim().toLowerCase();
+  results.replaceChildren();
+
+  if (!query) {
+    results.hidden = true;
+    input.focus();
+    return;
+  }
+
+  const matches = items.filter(item =>
+    item.join(' ').toLowerCase().includes(query)
+  );
+
+  const heading = document.createElement('div');
+  heading.className = 'results-heading';
+  heading.textContent = matches.length
+    ? `SØKERESULTAT (${matches.length})`
+    : 'INGEN TREFF';
+
+  results.append(heading);
+
+  matches.forEach(item => {
+    const link = document.createElement('a');
+    link.href = item[2];
+
+    const wrap = document.createElement('span');
+    const title = document.createElement('strong');
+    const description = document.createElement('small');
+    const arrow = document.createElement('b');
+
+    title.textContent = item[0];
+    description.textContent = item[1];
+    arrow.textContent = '↗';
+
+    wrap.append(title, description);
+    link.append(wrap, arrow);
+    results.append(link);
+  });
+
+  results.hidden = false;
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    results.hidden = true;
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.classList.remove('is-open');
+  }
+
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault();
+    input.focus();
+  }
+});
+</script>
+
 </body>
 </html>
