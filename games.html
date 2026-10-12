@@ -6,7 +6,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SIGVIA | Games</title>
   <link rel="stylesheet" href="site.css">
+
+  <style>
+    .neon-drift-panel {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(0, 217, 255, 0.4);
+      background:
+        radial-gradient(ellipse at 90% 10%, rgba(139, 92, 246, 0.22), transparent 50%),
+        radial-gradient(ellipse at 10% 90%, rgba(0, 217, 255, 0.15), transparent 50%),
+        rgba(8, 12, 30, 0.94);
+      transition: transform 0.25s ease, border-color 0.25s ease,
+                  box-shadow 0.25s ease;
+    }
+
+    .neon-drift-panel:hover {
+      transform: translateY(-5px);
+      border-color: #00d9ff;
+      box-shadow: 0 0 28px rgba(0, 217, 255, 0.17);
+    }
+
+    .neon-drift-panel h2 {
+      letter-spacing: 2px;
+      text-shadow: 0 0 18px rgba(0, 217, 255, 0.25);
+    }
+
+    .neon-drift-panel h2 span {
+      color: #00d9ff;
+    }
+
+    .neon-drift-panel .game-label {
+      display: inline-block;
+      padding: 6px 10px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0, 217, 255, 0.4);
+      border-radius: 6px;
+      color: #00d9ff;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+    }
+
+    .neon-drift-panel .game-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin: 18px 0;
+      color: #c7d2fe;
+      font-size: 0.85rem;
+    }
+
+    .neon-drift-panel .button.primary {
+      background: linear-gradient(110deg, #00bfe8, #7861ff);
+      color: #fff;
+      border: 0;
+      box-shadow: 0 0 18px rgba(0, 217, 255, 0.2);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .neon-drift-panel {
+        transition: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <a class="logo" href="index.html">SIGVIA</a>
@@ -22,10 +86,14 @@
     <section class="page-heading">
       <div class="eyebrow">Play / Explore / Repeat</div>
       <h1>THE <span class="gradient-text">ARCADE</span></h1>
-      <p class="intro">Vel eit spel, test ferdigheitene dine og jag etter den høgaste poengsummen.</p>
+      <p class="intro">
+        Vel eit spel, test ferdigheitene dine og jag etter den høgaste poengsummen.
+      </p>
     </section>
 
     <section class="section">
+
+      <!-- GAME 001: SPACE SHOOTER -->
       <article class="panel">
         <div class="eyebrow">Game 001</div>
         <h2>SIGVIA SPACE SHOOTER</h2>
@@ -33,25 +101,67 @@
           Ta kontroll over romskipet ditt, unngå fiendar og prøv å få
           så mange poeng som mogleg.
         </p>
-        <p><strong>Kontrollar:</strong> WASD eller piltastane for rørsle, mellomrom for å skyte.</p>
+        <p>
+          <strong>Kontrollar:</strong>
+          WASD eller piltastane for rørsle, mellomrom for å skyte.
+        </p>
         <div class="actions">
           <a class="button primary" href="game.html">PLAY NOW ↗</a>
           <a class="button" href="index.html">BACK HOME</a>
         </div>
       </article>
 
+      <!-- GAME 002: CYBER RUNNER -->
       <article class="panel">
         <div class="eyebrow">Game 002</div>
         <h2>CYBER RUNNER</h2>
         <p>
-          Spring gjennom skogen, hopp over hinder og prøv å slå din eigen rekord.
+          Rull gjennom cyber, hopp over hinder og prøv å slå din eigen rekord.
         </p>
-        <p><strong>Kontrollar:</strong> Mellomrom, pil opp eller W for å hoppe.</p>
+        <p>
+          <strong>Kontrollar:</strong>
+          Mellomrom, pil opp eller W for å hoppe.
+        </p>
         <div class="actions">
           <a class="button primary" href="runner.html">PLAY NOW ↗</a>
           <a class="button" href="index.html">BACK HOME</a>
         </div>
       </article>
+
+      <!-- GAME 003: NEON DRIFT -->
+      <article class="panel neon-drift-panel">
+        <div class="eyebrow">Game 003</div>
+
+        <span class="game-label">SIGVIA ORIGINAL · TRUE 3D</span>
+
+        <h2>NEON <span>DRIFT</span></h2>
+
+        <p>
+          Take control of a powerful car and drift through a futuristic
+          neon city. Master the corners, build your drift score and
+          own the night.
+        </p>
+
+        <div class="game-details">
+          <span>◈ 3D GRAPHICS</span>
+          <span>⌨ KEYBOARD</span>
+          <span>▣ MOBILE CONTROLS</span>
+        </div>
+
+        <p>
+          <strong>Kontrollar:</strong>
+          WASD eller piltastane for å køyre. Bruk mellomrom for drifting.
+          På mobil bruker du kontrollane på skjermen.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="neon-drift.html">
+            PLAY NEON DRIFT ↗
+          </a>
+          <a class="button" href="index.html">BACK HOME</a>
+        </div>
+      </article>
+
     </section>
   </main>
 
