@@ -523,3 +523,87 @@ a:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+/* =====================================
+   SIGVIA — ADVANCED NEON BACKGROUND
+   ===================================== */
+
+body {
+  background-color: #050611;
+  background-image:
+    radial-gradient(ellipse at 15% 25%,
+      rgba(0, 217, 255, 0.16), transparent 35%),
+    radial-gradient(ellipse at 85% 35%,
+      rgba(139, 92, 246, 0.18), transparent 38%),
+    radial-gradient(ellipse at 50% 100%,
+      rgba(0, 80, 255, 0.12), transparent 45%);
+  background-attachment: fixed;
+}
+
+/* Deep moving light atmosphere */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 40%,
+      rgba(0, 217, 255, 0.10), transparent 25%),
+    radial-gradient(ellipse at 70% 60%,
+      rgba(139, 92, 246, 0.12), transparent 30%);
+  filter: blur(45px);
+  animation: sigvia-aurora 18s ease-in-out infinite alternate;
+}
+
+/* Subtle digital star particles */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(circle, #00d9ff 1px, transparent 1.5px),
+    radial-gradient(circle, #a78bfa 1px, transparent 1.5px),
+    radial-gradient(circle, #ffffff 1px, transparent 1.5px);
+  background-size: 137px 137px, 193px 193px, 251px 251px;
+  background-position: 0 0, 65px 40px, 120px 90px;
+  animation: sigvia-stars 35s linear infinite;
+}
+
+body > header,
+body > main,
+body > footer {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes sigvia-aurora {
+  0% {
+    transform: translate(-3%, -2%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(3%, 2%) rotate(8deg) scale(1.08);
+  }
+  100% {
+    transform: translate(-1%, 4%) rotate(-5deg) scale(1.03);
+  }
+}
+
+@keyframes sigvia-stars {
+  from {
+    background-position: 0 0, 65px 40px, 120px 90px;
+  }
+  to {
+    background-position: 137px 137px, 258px 233px, 371px 341px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
+}
